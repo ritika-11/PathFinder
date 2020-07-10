@@ -1,0 +1,383 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+</head>
+<style type="text/css">
+ .panel {
+  padding: 0 18px;
+  display: none;
+  background-color: white;
+  overflow: hidden;
+}
+.panel.show {
+    display: block !important;
+}
+
+.accordion {
+   width:270px;
+}
+
+ body {
+        overflow:hidden;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        margin-right: 0px;
+        margin-left: 0px;
+        padding-top: 0px;
+        padding-right: 0px;
+        padding-bottom: 0px;
+        padding-left: 0px;
+    }
+
+</style>
+<body>  
+
+	<div id='mydiv' style="position: absolute; background-color: #f1f1f1">
+    <header style="padding: 20px">Select Algorithm</header>
+	<div>
+	<button class="accordion" name="a_star"><h3>A*</h3></button>
+	<div class="panel">
+	   
+      <header class="option_header">
+            <h3>Heuristic</h3>
+      </header>
+
+      <div id="astar_heuristic" class="sub_options">
+            <input type="radio" name="heuristic"value="manhattan" checked/>
+            <label>Manhattan</label> <br>
+            <input type="radio" name="heuristic"value="euclidean"/>
+            <label >Euclidean</label> <br>
+            <input type="radio" name="heuristic"value="diagonal"/>
+            <label >diagonal</label> <br>
+       </div>
+
+        <header class="option_header">
+            <h3>Options</h3>
+        </header>
+
+         <div class="optional sub_options">
+            <input type="checkbox" id='checkb1'checked>
+            <label >Allow Diagonal</label> <br>
+          </div>
+
+    </div>	
+	</div>
+
+
+
+   <div>
+	<button class="accordion" name="ida_star"><h3>IDA*</h3></button>
+	<div class="panel">
+	   
+      <header class="option_header">
+            <h3>Heuristic</h3>
+      </header>
+
+      <div id="astar_heuristic" class="sub_options">
+            <input type="radio" name="heuristic" value="manhattan" checked />
+            <label>Manhattan</label> <br>
+            <input type="radio" name="heuristic" value="euclidean"/>
+            <label >Euclidean</label> <br>
+            <input type="radio" name="heuristic" value="diagonal"/>
+            <label >diagonal</label> <br>
+       </div>
+
+        <header class="option_header">
+            <h3>Options</h3>
+        </header>
+
+         <div class="optional sub_options">
+            <input type="checkbox" id='checkb2' checked>
+            <label >Allow Diagonal</label> <br>
+          </div>
+
+    </div>	
+	</div>
+
+     
+	<div>
+	<button class="accordion" name="Depth First Search"><h3>Depth First Search</h3></button>
+	<div class="panel">
+	   
+      <header class="option_header">
+            <h3>Heuristic</h3>
+      </header>
+
+      <div id="astar_heuristic" class="sub_options">
+            <input type="radio" name="heuristic" value="manhattan" checked />
+            <label>Manhattan</label> <br>
+            <input type="radio" name="heuristic" value="euclidean"/>
+            <label >Euclidean</label> <br>
+            <input type="radio" name="heuristic" value="diagonal"/>
+            <label >diagonal</label> <br>
+       </div>
+
+        <header class="option_header">
+            <h3>Options</h3>
+        </header>
+
+         <div class="optional sub_options">
+            <input type="checkbox" id='checkb3' checked>
+            <label >Allow Diagonal</label> <br>
+          </div>
+
+    </div>	
+	</div>
+
+	<div>
+	<button class="accordion" name="Breadth First Search"><h3>Breadth First Search</h3></button>
+	<div class="panel">
+	   
+      <header class="option_header">
+            <h3>Heuristic</h3>
+      </header>
+
+      <div id="astar_heuristic" class="sub_options">
+            <input type="radio" name="heuristic" value="manhattan" checked />
+            <label>Manhattan</label> <br>
+            <input type="radio" name="heuristic" value="euclidean"/>
+            <label >Euclidean</label> <br>
+            <input type="radio" name="heuristic" value="diagonal"/>
+            <label >diagonal</label> <br>
+       </div>
+
+        <header class="option_header">
+            <h3>Options</h3>
+        </header>
+
+         <div class="optional sub_options">
+            <input type="checkbox" id='checkb4' checked>
+            <label >Allow Diagonal</label> <br>
+          </div>
+
+    </div>	
+	</div>
+
+	<div>
+	<button class="accordion" name="Best First Search"><h3>Best First Search</h3></button>
+	<div class="panel">
+	   
+      <header class="option_header">
+            <h3>Heuristic</h3>
+      </header>
+
+      <div id="astar_heuristic" class="sub_options">
+            <input type="radio" name="heuristic" value="manhattan" checked />
+            <label>Manhattan</label> <br>
+            <input type="radio" name="heuristic" value="euclidean"/>
+            <label >Euclidean</label> <br>
+            <input type="radio" name="heuristic" value="diagonal"/>
+            <label >diagonal</label> <br>
+       </div>
+
+        <header class="option_header">
+            <h3>Options</h3>
+        </header>
+
+         <div class="optional sub_options">
+            <input type="checkbox" id='checkb5' checked>
+            <label >Allow Diagonal</label> <br>
+          </div>
+
+    </div>	
+	</div>
+
+
+
+ <div id='myButtons' style="padding: 10px; background-color: #f1f1f1;" >
+<!--   start , restart, resume   -->
+  	<button id='search_button' class='searchButton' onclick="onSearch()">Start search</button>
+  	<!--   cancel , pause, clear path   -->
+  	<button id= 'pause_button' class='pauseButton' onclick="onPause()">Pause search</button>
+  	<!-- clear walls-->
+  	<button id='clear walls_button' class='clearWallsButton' onclick="clearWalls()">Clear walls</button>
+
+  </div>
+    </div>
+
+ 
+
+<script type="text/javascript">
+var algorithm="a_star";
+var acc = document.getElementsByClassName("accordion");
+var panel = document.getElementsByClassName('panel');
+
+for (var i = 0; i < acc.length; i++) {
+    acc[i].onclick = function() {
+    	var setClasses = !this.classList.contains('active');
+        setClass(acc, 'active', 'remove');
+        setClass(panel, 'show', 'remove');
+        
+       	if (setClasses) {
+            this.classList.toggle("active");
+            this.nextElementSibling.classList.toggle("show");
+        }
+        algorithm=this.name;
+        console.log(algorithm);
+    }
+}
+
+function setClass(els, className, fnName) {
+    for (var i = 0; i < els.length; i++) {
+        els[i].classList[fnName](className);
+    }
+}
+
+</script>
+
+<script>
+//Make the DIV element draggagle:
+dragElement(document.getElementById("mydiv"));
+//dragElement(document.getElementById("myButtons"));
+
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (document.getElementById(elmnt.id + "header")) {
+    /* if present, the header is where you move the DIV from:*/
+    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+  } else {
+    /* otherwise, move the DIV from anywhere inside the DIV:*/
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    /* stop moving when mouse button is released:*/
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+</script>
+
+<script type="text/javascript">
+	function onSearch()
+	{
+          var options = document.getElementsByName('heuristic');
+          var heuristic;
+          for(var i = 0; i < options.length; i++){
+          if(options[i].checked){
+          heuristic = options[i].value;
+           }
+         }
+         var allowDiagonal; 
+         if(algorithm=='a_star')
+         {
+         	allowDiagonal = document.getElementById("checkb1").checked; 
+         }else if(algorithm=='ida_star')
+         {
+             allowDiagonal = document.getElementById("checkb2").checked; 
+         }else if(algorithm=='Depth First Search')
+         {
+             allowDiagonal = document.getElementById("checkb3").checked; 
+         }else if(algorithm=='Breadth First Search')
+         {
+         	 allowDiagonal = document.getElementById("checkb4").checked; 
+         }else if(algorithm=='Best First Search')
+         {
+         	allowDiagonal = document.getElementById("checkb5").checked;
+         }
+
+         console.log(allowDiagonal);
+         console.log(algorithm);
+         console.log(heuristic);
+
+         var finder = new AStarFinder({
+                    allowDiagonal: allowDiagonal,                  
+                    heuristic: heuristic,
+                });
+         finder.findPath();
+         document.getElementById("pause_button").onclick = onPause;
+         document.getElementById("search_button").onclick = onRestart;
+
+         //onSearchComplete
+        // Resetart and clear path 
+
+	}
+
+    var search_button = document.getElementById("search_button");
+    var pause_button = document.getElementById("pause_button");
+    var clear_walls_button = document.getElementById("clear walls_button");
+   
+
+	function onPause()
+	{
+		document.getElementById("pause_button").onclick = onCancel;
+        document.getElementById("search_button").onclick = onResume;
+        pause_button.innerHTML='cancel search';
+        search_button.innerHTML='resume search';
+        console.log('onPause');
+	}
+
+	function onRestart()
+	{
+		document.getElementById("pause_button").onclick = onPause;
+        document.getElementById("search_button").onclick = onRestart;
+        pause_button.innerHTML='pause search';
+        search_button.innerHTML='restart serach';
+       console.log('onRestart');
+	}
+
+	function clearWalls()
+	{
+		document.getElementById("pause_button").onclick = onPause;
+        document.getElementById("search_button").onclick = onSearch;
+         pause_button.innerHTML='pause search';
+         search_button.innerHTML='Start serach';
+		console.log('clear walls');
+	}
+
+	function onCancel()
+	{
+		document.getElementById("pause_button").onclick = onPause;
+        document.getElementById("search_button").onclick = onSearch;
+         pause_button.innerHTML='pause search';
+         search_button.innerHTML='Start serach';
+		 console.log('oncancel'); 
+	}
+	function clearPath()
+	{
+		document.getElementById("pause_button").onclick = onPause;
+        document.getElementById("search_button").onclick = onSearch;
+        pause_button.innerHTML='pause search';
+        search_button.innerHTML='Start serach';
+		console.log('clear path');
+	}
+	function  onResume()
+	{
+		document.getElementById("pause_button").onclick = onPause;
+        document.getElementById("search_button").onclick = onRestart;
+        pause_button.innerHTML='pause search';
+        search_button.innerHTML='Restart serach';
+		console.log('onResume');
+	}
+</script>
+
+    <canvas id="myCanvas"></canvas>
+    <script type="text/javascript" src="./bundle.js"></script>
+</body>
+</html>
