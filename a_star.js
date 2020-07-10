@@ -124,6 +124,7 @@ function printPath (cellDetails,endPoints,path)
         col = temp_col; 
     } 
      path.push([row,col]); 
+      path.push([endPoints.srcX,endPoints.srcY]); 
      //console.log(endPoints.srcX,endPoints.srcY);
 }
 
