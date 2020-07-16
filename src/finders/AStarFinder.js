@@ -5,6 +5,8 @@ function AStarFinder(opt) {
    opt = opt || {};
    this.allowDiagonal = opt.allowDiagonal||true;
    this.heuristic = opt.heuristic||Heuristic.manhattan;
+   this.compare = opt.comparison||false;
+   this.operations=0;
 }
 
 AStarFinder.prototype.findPath = function(srcX,srcY,destX,destY,grid) {
@@ -12,6 +14,7 @@ var unexploredCellsSet;
 var rows = grid.nodes.length;
 var columns = grid.nodes[0].length;
 var path = new Array();
+
 var endPoints = {
    srcX:srcX,
    srcY:srcY,
@@ -66,14 +69,13 @@ var endPoints = {
     var temp = {
     value:false
    };
-
+   
 
    while(!unexploredCellsSet.isEmpty())
    {
       var val = unexploredCellsSet.extractMinimum();
       
       exploredCells[val.value.x][val.value.y]=true;
-      
       var x = val.value.x;
       var y = val.value.y;
       var neighbours = this.getNeighbours(x,y,grid,this.allowDiagonal);
@@ -90,13 +92,32 @@ var endPoints = {
       if(temp.value==true)
         break;
 
-   //   grid.getNodeAt(val.value.x,val.value.y).closed=true;  
+     this.operations++;
+      grid.getNodeAt(val.value.x,val.value.y).closed=true;  
    }
   console.log(path);
-   return path;
 
+  if(this.compare==true)
+  {
+      return this.operations;
+  }
+   else
+   {
+      return path;
+   }  
 };
 
+AStarFinder.prototype.getCost = function(x,y,x1,y1)
+{
+   if(x==x1||y==y1)
+   {
+    return 1;
+   }
+   else
+   {
+     return 1.414;
+   }
+} 
 
 AStarFinder.prototype.isValidCell = function (x,y,grid)
 {
@@ -161,7 +182,8 @@ AStarFinder.prototype.diagonal = function (x,y,endPoints)
 
  AStarFinder.prototype.isUnblocked = function(grid,x,y)
 {
-   if(grid.nodes[y][x].walkable===true)
+  console.log(y,x);
+   if(grid.nodes[y][x].walkable==1)
     return true;
    else
     return false;
@@ -175,22 +197,22 @@ AStarFinder.prototype.getNeighbours = function(x,y,grid,allowDiagonal)
         s2 = false, d2 = false,
         s3 = false, d3 = false;
   
-        if(this.isUnblocked(grid,x-1,y))
+        if(this.isValidCell(x-1,y,grid)&&this.isUnblocked(grid,x-1,y))
         {
            neighbours.push([x-1,y]);  
            s0=true;
         }
-        if(this.isUnblocked(grid,x,y-1))
+        if(this.isValidCell(x,y-1,grid)&&this.isUnblocked(grid,x,y-1))
         {
            neighbours.push([x,y-1]);  
            s1=true;
         }
-        if(this.isUnblocked(grid,x+1,y))
+        if(this.isValidCell(x+1,y,grid)&&this.isUnblocked(grid,x+1,y))
         {
            neighbours.push([x+1,y]);  
            s2=true;
         }
-        if(this.isUnblocked(grid,x,y+1))
+        if(this.isValidCell(x,y+1,grid)&&this.isUnblocked(grid,x,y+1))
         {
            neighbours.push([x,y+1]); 
            s3=true; 
@@ -206,19 +228,19 @@ AStarFinder.prototype.getNeighbours = function(x,y,grid,allowDiagonal)
        d2=s3||s0;
        d3=s0||s1;
 
-       if(d0&&this.isUnblocked(grid,x+1,y-1))
+       if(this.isValidCell(x+1,y-1,grid)&&d0&&this.isUnblocked(grid,x+1,y-1))
        {
         neighbours.push([x+1,y-1]);
        }
-       if(d1&&this.isUnblocked(grid,x+1,y+1))
+       if(this.isValidCell(x+1,y+1,grid)&&d1&&this.isUnblocked(grid,x+1,y+1))
        {
         neighbours.push([x+1,y+1]);
        }
-       if(d2&&this.isUnblocked(grid,x-1,y+1))
+       if(this.isValidCell(x-1,y+1,grid)&&d2&&this.isUnblocked(grid,x-1,y+1))
        {
         neighbours.push([x-1,y+1]);
        }
-       if(d3&&this.isUnblocked(grid,x-1,y-1))
+       if(this.isValidCell(x-1,y-1,grid)&&d3&&this.isUnblocked(grid,x-1,y-1))
        {
         neighbours.push([x-1,y-1]);
        }
@@ -246,7 +268,7 @@ AStarFinder.prototype.checkneighbour = function (x,y,cellDetails,foundDest,explo
      }
      else if(exploredCells[x][y]==false&&this.isUnblocked(grid,x,y,endPoints)==true)
      {
-      var gNew = cellDetails[xOriginal][yOriginal].g + 1.0; 
+      var gNew = cellDetails[xOriginal][yOriginal].g + this.getCost(x,y,xOriginal,yOriginal); 
        var hNew
       if(this.heuristic==Heuristic.manhattan)
       {
@@ -257,12 +279,12 @@ AStarFinder.prototype.checkneighbour = function (x,y,cellDetails,foundDest,explo
       }
      
       var fNew = gNew+hNew;
-
         
        if (cellDetails[x][y].f == Number.MAX_VALUE ||cellDetails[x][y].f > fNew) 
                 {      
                     unexploredCellsSet.insert(fNew,{x:x,y:y});  
-                 //   grid.getNodeAt(x,y).opened=true;             
+                    grid.getNodeAt(x,y).opened=true;  
+                    this.operations++;           
                     cellDetails[x][y].f = fNew; 
                     cellDetails[x][y].g = gNew; 
                     cellDetails[x][y].h = hNew; 
