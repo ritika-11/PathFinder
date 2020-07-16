@@ -87,6 +87,11 @@ var Controller = StateMachine.create({
             from: ['draggingStart', 'draggingEnd', 'drawingWall', 'erasingWall'],
             to  : 'ready'
         },
+         {
+            name: 'compare',
+            from: ['ready', 'finished','modified','paused'],
+            to:   'ready'
+        },
     ],
 });
 
@@ -206,6 +211,52 @@ $.extend(Controller, {
         }, View.nodeColorizeEffect.duration * 1.2);
         // => ready
     },
+      oncompare:function()
+    {
+        //this function is called while comparing algorithms
+         var finderAStar = new Pf.AStarFinder({comparison:true});
+         var operationsAStar = finderAStar.findPath(this.startX,this.startY,this.endX,this.endY,this.grid);
+
+         var finderBestFirst = new Pf.BestFirstFinder({comparison:true});
+         var operationsBestFirst = finderBestFirst.findPath(this.startX,this.startY,this.endX,this.endY,this.grid);
+           
+         var finderBreadthFirst = new Pf.BreadthFirstFinder({comparison:true});
+         var operationsBreadthFirst = finderBreadthFirst.findPath(this.startX,this.startY,this.endX,this.endY,this.grid);
+
+         var finderDijkstra = new Pf.DijkstraFinder({comparison:true});
+         var operationsDijkstra = finderDijkstra.findPath(this.startX,this.startY,this.endX,this.endY,this.grid);
+
+         //@ritika duplicate this for remaining algos and fill values in chart 
+        var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+         theme: "light2",
+          title:{
+        text: "Algorithm Comparison"
+          },
+         axisY:{
+        includeZero: true,
+        title:'No of Operations'
+          },
+          axisX:{
+        title:'Algorithm used'
+          },
+        data: [{        
+        type: "column",
+        indexLabelFontSize: 16,
+        dataPoints: [
+            { y: operationsAStar, label:'AStarFinder'},
+            { y: operationsBestFirst, label:'Best First Search'},
+            { y: operationsDijkstra, label:'Dijkstra' },
+            { y: operationsBreadthFirst, label:'Breadth First Search' },
+        ]
+       }]
+      });
+
+        chart.render();
+        document.getElementById('graph').style.display='block';
+         //values.abcd();
+    },
+
 
     /**
      * The following functions are called on entering states.
@@ -227,6 +278,11 @@ $.extend(Controller, {
             text: 'Clear Walls',
             enabled: true,
             callback: $.proxy(this.reset, this),
+        },{
+            id: 4,
+            text: 'Compare',
+            enabled: true,
+            callback: $.proxy(this.compare, this),
         });
         // => [starting, draggingStart, draggingEnd, drawingStart, drawingEnd]
     },
@@ -268,6 +324,12 @@ $.extend(Controller, {
             text: 'Cancel Search',
             enabled: true,
             callback: $.proxy(this.cancel, this),
+        },
+         {
+            id: 4,
+            text: 'Compare',
+            enabled: true,
+            callback: $.proxy(this.compare, this),
         });
         // => [searching, ready]
     },
@@ -283,6 +345,12 @@ $.extend(Controller, {
             text: 'Clear Path',
             enabled: true,
             callback: $.proxy(this.clear, this),
+        },
+         {
+            id: 4,
+            text: 'Compare',
+            enabled: true,
+            callback: $.proxy(this.compare, this),
         });
     },
     onmodified: function() {
@@ -297,6 +365,12 @@ $.extend(Controller, {
             text: 'Clear Path',
             enabled: true,
             callback: $.proxy(this.clear, this),
+        },
+         {
+            id: 4,
+            text: 'Compare',
+            enabled: true,
+            callback: $.proxy(this.compare, this),
         });
     },
 
@@ -306,7 +380,7 @@ $.extend(Controller, {
      */
     hookPathFinding: function() {
 
-        PF.Node.prototype = {
+        Pf.Node.prototype = {
             get opened() {
                 return this._opened;
             },

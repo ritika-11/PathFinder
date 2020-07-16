@@ -3,10 +3,11 @@
   <head>
     <meta charset="UTF-8">
     <title>PathFinding.js</title>
-
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="./css/style.css" />
     <link rel="stylesheet" href="./lib/themes/jquery.ui.all.css" />
 
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script type="text/javascript" src="./lib/raphael-min.js"></script>
     <script type="text/javascript" src="./lib/es5-shim.min.js"></script>
     <script type="text/javascript" src="./lib/jquery-1.7.2.min.js"></script>
@@ -113,6 +114,13 @@
   </head>
   <body>
     <div id="draw_area" ></div>
+
+   <div id="graph" class="w3-modal">
+    <div style="width: 500px; height:500px"class="w3-modal-content">
+        <button onclick="document.getElementById('graph').style.display='none'"style="height:50px;width:50px">X</button>
+       <div id="chartContainer" ></div>
+    </div>
+   </div>
 
     <div id="instructions_panel" class="panel">
       <header>
