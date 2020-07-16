@@ -122,7 +122,7 @@ BestFirstFinder.prototype.findPath = function(startX, startY, endX, endY, grid, 
         } // end for each neighbor
     } // end while not open list empty
 
-    if(compare) {
+    if(this.compare) {
         return operations;
     }
 

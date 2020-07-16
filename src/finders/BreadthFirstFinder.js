@@ -97,7 +97,7 @@ BreadthFirstFinder.prototype.findPath = function(startX, startY, endX, endY, gri
         }
     }
 
-    if(compare) {
+    if(this.compare) {
         return operations;
     }
     // fail to find the path
