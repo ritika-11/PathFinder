@@ -10,6 +10,7 @@ function AStarFinder(opt) {
 }
 
 AStarFinder.prototype.findPath = function(srcX,srcY,destX,destY,grid) {
+  console.log('went here to find path');
 var unexploredCellsSet;
 var rows = grid.nodes.length;
 var columns = grid.nodes[0].length;
@@ -139,14 +140,10 @@ AStarFinder.prototype.isDestination = function isDestination (x,y,endPoints)
 {
   var row = endPoints.destX;
   var col = endPoints.destY;
-  console.log(cellDetails);
    //console.log(cellDetails[row][col].parentX,cellDetails[row][col].parentY);
-    console.log('yghg');
    while (!(cellDetails[row][col].parentX == row 
              && cellDetails[row][col].parentY == col )) 
     { 
-        //Path.push (make_pair (row, col));
-        console.log(row,col);
         path.push([row,col]); 
         var temp_row = cellDetails[row][col].parentX; 
         var temp_col = cellDetails[row][col].parentY; 
@@ -182,7 +179,6 @@ AStarFinder.prototype.diagonal = function (x,y,endPoints)
 
  AStarFinder.prototype.isUnblocked = function(grid,x,y)
 {
-  console.log(y,x);
    if(grid.nodes[y][x].walkable==1)
     return true;
    else

@@ -213,48 +213,27 @@ $.extend(Controller, {
     },
       oncompare:function()
     {
-        //this function is called while comparing algorithms
+        
+         setTimeout(function() {
          var finderAStar = new Pf.AStarFinder({comparison:true});
-         var operationsAStar = finderAStar.findPath(this.startX,this.startY,this.endX,this.endY,this.grid);
-
          var finderBestFirst = new Pf.BestFirstFinder({comparison:true});
-         var operationsBestFirst = finderBestFirst.findPath(this.startX,this.startY,this.endX,this.endY,this.grid);
-           
          var finderBreadthFirst = new Pf.BreadthFirstFinder({comparison:true});
-         var operationsBreadthFirst = finderBreadthFirst.findPath(this.startX,this.startY,this.endX,this.endY,this.grid);
-
          var finderDijkstra = new Pf.DijkstraFinder({comparison:true});
-         var operationsDijkstra = finderDijkstra.findPath(this.startX,this.startY,this.endX,this.endY,this.grid);
 
-         //@ritika duplicate this for remaining algos and fill values in chart 
-        var chart = new CanvasJS.Chart("chartContainer", {
-        animationEnabled: true,
-         theme: "light2",
-          title:{
-        text: "Algorithm Comparison"
-          },
-         axisY:{
-        includeZero: true,
-        title:'No of Operations'
-          },
-          axisX:{
-        title:'Algorithm used'
-          },
-        data: [{        
-        type: "column",
-        indexLabelFontSize: 16,
-        dataPoints: [
-            { y: operationsAStar, label:'AStarFinder'},
-            { y: operationsBestFirst, label:'Best First Search'},
-            { y: operationsDijkstra, label:'Dijkstra' },
-            { y: operationsBreadthFirst, label:'Breadth First Search' },
-        ]
-       }]
-      });
+        var operationsAStar = finderAStar.findPath(Controller.startX,Controller.startY,Controller.endX,Controller.endY,Controller.grid);
+        var operationsBestFirst = finderBestFirst.findPath(Controller.startX,Controller.startY,Controller.endX,Controller.endY,Controller.grid,Controller.end);
+        var operationsBreadthFirst = finderBreadthFirst.findPath(Controller.startX,Controller.startY,Controller.endX,Controller.endY,Controller.grid,Controller.end);
+        var operationsDijkstra = finderDijkstra.findPath(Controller.startX,Controller.startY,Controller.endX,Controller.endY,Controller.grid,Controller.end);
+        
 
-        chart.render();
-        document.getElementById('graph').style.display='block';
-         //values.abcd();
+         console.log(operationsAStar);
+         console.log(operationsBestFirst);
+         console.log(operationsBreadthFirst);
+         console.log(operationsDijkstra);
+        
+         Controller.shortSecondFunction(operationsAStar,operationsBestFirst,operationsBreadthFirst,operationsDijkstra);
+    }, 5000);
+
     },
 
 
@@ -612,5 +591,36 @@ $.extend(Controller, {
     },
     isStartOrEndPos: function(gridX, gridY) {
         return this.isStartPos(gridX, gridY) || this.isEndPos(gridX, gridY);
+    },
+    shortSecondFunction: function(a,b,c,d)
+    {
+           var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+         theme: "light2",
+          title:{
+        text: "Algorithm Comparison"
+          },
+         axisY:{
+        includeZero: true,
+        title:'No of Operations'
+          },
+          axisX:{
+        title:'Algorithm used'
+          },
+        data: [{        
+        type: "column",
+        indexLabelFontSize: 16,
+        dataPoints: [
+            { y: a, label:'AStarFinder'},
+            { y: b, label:'Best First Search'},
+            { y: c, label:'Breadth First Search' },
+            { y: d, label:'Dijkstra' },
+        ]
+       }]
+      });
+      chart.render();
+      document.getElementById('graph').style.display='block';
+        console.log('seconf function called');
     }
+
 });

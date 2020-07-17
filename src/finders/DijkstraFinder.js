@@ -9,7 +9,7 @@ var Util = require('../core/Util');
 function DijkstraFinder(opt) {
     opt = opt || {};
     this.allowDiagonal = opt.allowDiagonal || true;
-    this.compare = opt.compare || false;
+    this.compare = opt.comparison || false;
 
     this.diagonalMovement = this.allowDiagonal;
 }
@@ -26,7 +26,7 @@ DijkstraFinder.prototype.findPath = function(startX, startY, endX, endY, grid, e
     endNodes = [], 
     diagonalMovement = this.diagonalMovement,
     compare = this.compare;
-    node, neighbors, neighbor, i, l, x, y, distance, destinationNumber = 1, operations = 0;
+    var node, neighbors, neighbor, i, l, x, y, distance, destinationNumber = 1, operations = 0;
 
     // get all destination nodes from end array
     for(var a=0;a<end.length;a++) {

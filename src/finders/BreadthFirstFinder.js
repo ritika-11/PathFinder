@@ -9,7 +9,7 @@ var Util = require('../core/Util');
 function BreadthFirstFinder(opt) {
     opt = opt || {};
     this.allowDiagonal = opt.allowDiagonal || true;
-    this.compare = opt.compare || false;
+    this.compare = opt.comparison || false;
 
     this.diagonalMovement = this.allowDiagonal;
 }
@@ -20,12 +20,12 @@ function BreadthFirstFinder(opt) {
  *    all end positions.
  */
 BreadthFirstFinder.prototype.findPath = function(startX, startY, endX, endY, grid, end) {
-    var openList = [],
-        diagonalMovement = this.diagonalMovement,
-        compare = this.compare;
-        startNode = grid.getNodeAt(startX, startY),
-        endNodes = [],
-        neighbors, neighbor, node, i, l, destinationIndex = -1, destinationNumber = 1, operations = 0;
+    var openList = [];
+    var diagonalMovement = this.diagonalMovement;
+    var   compare = this.compare;
+    var   startNode = grid.getNodeAt(startX, startY);
+    var   endNodes = [];
+    var   neighbors, neighbor, node, i, l, destinationIndex = -1, destinationNumber = 1, operations = 0;
 
     // get all destination nodes from end array
     for(var a=0 ;a<end.length; a++) {

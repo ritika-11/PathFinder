@@ -13,7 +13,7 @@ function BestFirstFinder(opt) {
     opt = opt || {};
     this.allowDiagonal = opt.allowDiagonal || true;
     this.heuristic = opt.heuristic || Heuristic.manhattan;
-    this.compare = opt.compare || false;
+    this.compare = opt.comparison || false;
 
     this.diagonalMovement = this.allowDiagonal;
 }
