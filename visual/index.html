@@ -91,7 +91,7 @@
       }
       
       </style>
-      <style>
+      <!-- <style>
         body, html {
           height: 100%;
           margin: 0;
@@ -110,17 +110,17 @@
           background-size: cover;
         }
 
-      </style>
+      </style> -->
   </head>
   <body>
     <div id="draw_area" ></div>
 
-   <div id="graph" class="w3-modal">
-    <div style="width: 500px; height:500px"class="w3-modal-content">
-        <button onclick="document.getElementById('graph').style.display='none'"style="height:50px;width:50px">X</button>
-       <div id="chartContainer" ></div>
+    <div id="graph" class="w3-modal">
+      <div style="width: 500px; height:500px"class="w3-modal-content">
+          <button onclick="document.getElementById('graph').style.display='none'"style="height:50px;width:50px">X</button>
+        <div id="chartContainer" ></div>
+      </div>
     </div>
-   </div>
 
     <div id="instructions_panel" class="panel">
       <header>
@@ -129,7 +129,7 @@
       </header>
       Click within the <span class="white">white</span> grid and drag your mouse to draw obstacles. <br>
       Drag the <span class="green">green</span> node to set the start position. <br>
-      Drag the <span class="red">red</span> node to set the end position. <br>
+      Toggle the switch <span class="red">red</span> to set the end positions. <br>
       Choose an algorithm from the right-hand panel. <br>
       Click Start Search in the lower-right corner to start the animation.
     </div>
@@ -141,21 +141,21 @@
         <h3 id="astar_header"><a href="#">A*</a></h3>
         <div id="astar_section" class="finder_section">
           <header class="option_header">
-            <h3>Heuristic</h3>
+            <h6>Heuristic</h6>
           </header>
           <div id="astar_heuristic" class="sub_options">
             <input type="radio" name="astar_heuristic" value="manhattan" checked />
             <label class="option_label">Manhattan</label> <br>
             <input type="radio" name="astar_heuristic" value="euclidean"/>
-            <label class="option_label">Euclidean</label> <br>
+            <label class="option_label">Euclidean</label> <br> 
           </div>
 
           <header class="option_header">
-            <h3>Options</h3>
+            <h6>Options</h6>
           </header>
           <div class="optional sub_options">
             <input type="checkbox" class="allow_diagonal" checked>
-            <label class="option_label">Allow Diagonal</label> <br>
+            <label class="option_label">Allow Diagonal</label> <br> <br> <br>
             <!-- <input type="checkbox" class="bi-directional">
             <label class="option_label">Bi-directional</label> <br>
             <input type="checkbox" class="dont_cross_corners">
@@ -168,19 +168,19 @@
         <h3 id="ida_header"><a href="#">IDA*</a></h3>
         <div id="ida_section" class="finder_section">
           <header class="option_header">
-            <h3>Heuristic</h3>
+            <h6>Heuristic</h6>
           </header>
           <div id="ida_heuristic" class="sub_options">
-            <input type="radio" name="ida_heuristic" value="euclidean"/>
+            <input type="radio" name="ida_heuristic" value="euclidean" checked/>
             <label class="option_label">Euclidean</label> <br>
             
           </div>
           <header class="option_header">
-            <h3>Options</h3>
+            <h6>Options</h6>
           </header>
           <div class="optional sub_options">
             <input type="checkbox" class="allow_diagonal" checked>
-            <label class="option_label">Allow Diagonal</label> <br>
+            <label class="option_label">Allow Diagonal</label> <br> <br>
             <!-- <input type="checkbox" class="dont_cross_corners">
             <label class="option_label">Don't Cross Corners</label> <br>
             <input class="spinner" name="astar_weight" value="1">
@@ -195,11 +195,11 @@
         <h3 id="breadthfirst_header"><a href="#">Breadth-First-Search</a></h3>
         <div id="breadthfirst_section" class="finder_section">
           <header class="option_header">
-            <h3>Options</h3>
+            <h6>Options</h6>
           </header>
           <div class="optional sub_options">
             <input type="checkbox" class="allow_diagonal" checked>
-            <label class="option_label">Allow Diagonal</label> <br>
+            <label class="option_label">Allow Diagonal</label> <br> <br>
             <!-- <input type="checkbox" class="bi-directional">
             <label class="option_label">Bi-directional</label> <br>
             <input type="checkbox" class="dont_cross_corners">
@@ -210,7 +210,7 @@
         <h3 id="bestfirst_header"><a href="#">Best-First-Search</a></h3>
         <div id="bestfirst_section" class="finder_section">
           <header class="option_header">
-            <h3>Heuristic</h3>
+            <h6>Heuristic</h6>
           </header>
           <div id="bestfirst_heuristic" class="sub_options">
             <input type="radio" name="bestfirst_heuristic" value="manhattan" checked />
@@ -224,7 +224,7 @@
           </div>
 
           <header class="option_header">
-            <h3>Options</h3>
+            <h6>Options</h6>
           </header>
           <div class="optional sub_options">
             <input type="checkbox" class="allow_diagonal" checked>
@@ -239,11 +239,11 @@
         <h3 id="dijkstra_header"><a href="#">Dijkstra</a></h3>
         <div id="dijkstra_section" class="finder_section">
           <header class="option_header">
-            <h3>Options</h3>
+            <h6>Options</h6>
           </header>
           <div class="optional sub_options">
             <input type="checkbox" class="allow_diagonal" checked>
-            <label class="option_label">Allow Diagonal</label> <br>
+            <label class="option_label">Allow Diagonal</label> <br> <br>
             <!-- <input type="checkbox" class="bi-directional">
             <label class="option_label">Bi-directional</label> <br>
             <input type="checkbox" class="dont_cross_corners">
@@ -329,12 +329,12 @@
       <button id="button1" class="control_button">Start Search</button>
       <button id="button2" class="control_button">Pause Search</button>
       <button id="button3" class="control_button">Clear Walls</button> <br> <br>
-      <label class="toggle_label">Add Wall</label>
+      <label class="toggle_label">Wall</label>
       <label class="switch">
         <input type="checkbox" id="toggle" class="togbtn">
         <span class="slider round"></span>
       </label>
-      <label class="toggle_label1">Add Destination</label> <br> <br>
+      <label class="toggle_label1">Destination</label> <br> <br>
       <button id="button4" class="control_button">Compare</button>
     </div>
 
