@@ -32,8 +32,8 @@ var endPoints = {
             f : 0,
             g : 0,
             h : Number.MIN_VALUE,
-            x :i,
-            y :j,
+            x :j,
+            y :i,
           };
          tempArray.push(cell);
        }
@@ -42,7 +42,7 @@ var endPoints = {
 
   var threshold = euclidean(srcX,srcY,endPoints);
   var path = new Array();
-  path.push(cellDetails[srcX][srcY]); 
+  path.push(cellDetails[srcY][srcX]); 
 
   var newThreshold;
       do {      
@@ -74,6 +74,7 @@ function recursion(path,cost,threshold,grid,cellDetails,endPoints,allowDiagonal)
 {    
   
    var currentNode = path[path.length-1];
+   console.log(currentNode);
    //console.log(currentNode);
    currentNode.h = euclidean(currentNode.x, currentNode.y,endPoints);
    currentNode.g = cost;
@@ -119,7 +120,7 @@ function getCost(x,y,x1,y1)
 
 function isValidCell (x,y,grid)
 {
-   if(x>=0&&x<grid.nodes.length&&y>=0&&y<grid.nodes[0].length)
+   if(x>=0&&x<grid.nodes[0].length&&y>=0&&y<grid.nodes.length)
     return true;
    else
     return false;
@@ -174,30 +175,30 @@ function getSuccessors(x,y,cellDetails,grid,allowDiagonal)
 
   if(isValidCell(x-1,y,grid)&&isUnblocked(grid,x-1,y))
   {
-    cellDetails[x-1][y].parentX=x;
-    cellDetails[x-1][y].parentY=y;
-    successors.push(cellDetails[x-1][y]);
+    cellDetails[y][x-1].parentX=x;
+    cellDetails[y][x-1].parentY=y;
+    successors.push(cellDetails[y][x-1]);
     s0=true;
   }
   if(isValidCell(x+1,y,grid)&&isUnblocked(grid,x+1,y))
   {
-    cellDetails[x+1][y].parentX=x;
-    cellDetails[x+1][y].parentY=y;
-    successors.push(cellDetails[x+1][y]);
+    cellDetails[y][x+1].parentX=x;
+    cellDetails[y][x+1].parentY=y;
+    successors.push(cellDetails[y][x+1]);
     s2=true;
   }
    if(isValidCell(x,y-1,grid)&&isUnblocked(grid,x,y-1))
   {
-    cellDetails[x][y-1].parentX=x;
-    cellDetails[x][y-1].parentY=y;
-    successors.push(cellDetails[x][y-1]);
+    cellDetails[y-1][x].parentX=x;
+    cellDetails[y-1][x].parentY=y;
+    successors.push(cellDetails[y-1][x]);
      s1=true;
   }
   if(isValidCell(x,y+1,grid)&&isUnblocked(grid,x,y+1))
   {
-    cellDetails[x][y+1].parentX=x;
-    cellDetails[x][y+1].parentY=y;
-    successors.push(cellDetails[x][y+1]);
+    cellDetails[y+1][x].parentX=x;
+    cellDetails[y+1][x].parentY=y;
+    successors.push(cellDetails[y+1][x]);
      s3=true; 
   }
  
@@ -212,27 +213,27 @@ function getSuccessors(x,y,cellDetails,grid,allowDiagonal)
   }
   if(d2&&isValidCell(x-1,y+1,grid)&&isUnblocked(grid,x-1,y+1))
   {
-    cellDetails[x-1][y+1].parentX=x;
-    cellDetails[x-1][y+1].parentY=y;
-    successors.push(cellDetails[x-1][y+1]);
+    cellDetails[y+1][x-1].parentX=x;
+    cellDetails[y+1][x-1].parentY=y;
+    successors.push(cellDetails[y+1][x-1]);
   }
   if(d3&&isValidCell(x-1,y-1,grid)&&isUnblocked(grid,x-1,y-1))
   {
-    cellDetails[x-1][y-1].parentX=x;
-    cellDetails[x-1][y-1].parentY=y;
-    successors.push(cellDetails[x-1][y-1]);
+    cellDetails[y-1][x-1].parentX=x;
+    cellDetails[y-1][x-1].parentY=y;
+    successors.push(cellDetails[y-1][x-1]);
   } 
   if(d0&&isValidCell(x+1,y-1,grid)&&isUnblocked(grid,x+1,y-1))
   {
-    cellDetails[x+1][y-1].parentX=x;
-    cellDetails[x+1][y-1].parentY=y;
-    successors.push(cellDetails[x+1][y-1]);
+    cellDetails[y-1][x+1].parentX=x;
+    cellDetails[y-1][x+1].parentY=y;
+    successors.push(cellDetails[y-1][x+1]);
   }
   if(d1&&isValidCell(x+1,y+1,grid)&&isUnblocked(grid,x+1,y+1))
   {
-    cellDetails[x+1][y+1].parentX=x;
-    cellDetails[x+1][y+1].parentY=y;
-    successors.push(cellDetails[x+1][y+1]);  
+    cellDetails[y+1][x+1].parentX=x;
+    cellDetails[y+1][x+1].parentY=y;
+    successors.push(cellDetails[y+1][x+1]);  
   }     
    return successors;
 }
