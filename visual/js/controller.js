@@ -217,6 +217,7 @@ $.extend(Controller, {
         var gridCopyBestFirst = this.grid.clone();
         var gridCopyBreadthFirst = this.grid.clone();
         var gridCopyDijkstra = this.grid.clone();
+
         var finderAStar = new Pf.AStarFinder({comparison:true});
         var finderBestFirst = new Pf.BestFirstFinder({comparison:true});
         var finderBreadthFirst = new Pf.BreadthFirstFinder({comparison:true});
@@ -227,36 +228,10 @@ $.extend(Controller, {
         var operationsBreadthFirst = finderBreadthFirst.findPath(this.startX,this.startY,this.endX,this.endY,gridCopyBreadthFirst,this.end);
         var operationsDijkstra = finderDijkstra.findPath(this.startX,this.startY,this.endX,this.endY,gridCopyDijkstra,this.end);
         
+        Controller.clearOperations();
+        Controller.clearFootprints();
 
-        console.log(operationsAStar);
-        console.log(operationsBestFirst);
-        console.log(operationsBreadthFirst);
-        console.log(operationsDijkstra);
-        
-    //      setTimeout(function() {
-    //     var gridCopyAStar = Controller.grid.clone();
-    //     var gridCopyBestFirst = Controller.grid.clone();
-    //     var gridCopyBreadthFirst = Controller.grid.clone();
-    //     var gridCopyDijkstra = Controller.grid.clone();
-    //     var finderAStar = new Pf.AStarFinder({comparison:true});
-    //     var finderBestFirst = new Pf.BestFirstFinder({comparison:true});
-    //     var finderBreadthFirst = new Pf.BreadthFirstFinder({comparison:true});
-    //     var finderDijkstra = new Pf.DijkstraFinder({comparison:true});
-
-    //     var operationsAStar = finderAStar.findPath(Controller.startX,Controller.startY,Controller.end[0].x,Controller.end[0].y,gridCopyAStar);
-    //     var operationsBestFirst = finderBestFirst.findPath(Controller.startX,Controller.startY,Controller.endX,Controller.endY,gridCopyBestFirst,Controller.end);
-    //     var operationsBreadthFirst = finderBreadthFirst.findPath(Controller.startX,Controller.startY,Controller.endX,Controller.endY,gridCopyBreadthFirst,Controller.end);
-    //     var operationsDijkstra = finderDijkstra.findPath(Controller.startX,Controller.startY,Controller.endX,Controller.endY,gridCopyDijkstra,Controller.end);
-        
-
-    //      console.log(operationsAStar);
-    //      console.log(operationsBestFirst);
-    //      console.log(operationsBreadthFirst);
-    //      console.log(operationsDijkstra);
-        
-    //      Controller.shortSecondFunction(operationsAStar,operationsBestFirst,operationsBreadthFirst,operationsDijkstra);
-    // }, 5000);
-    this.shortSecondFunction(operationsAStar,operationsBestFirst,operationsBreadthFirst,operationsDijkstra);
+    this.displayGraph(operationsAStar,operationsBestFirst,operationsBreadthFirst,operationsDijkstra);
 
     },
 
@@ -616,7 +591,7 @@ $.extend(Controller, {
     isStartOrEndPos: function(gridX, gridY) {
         return this.isStartPos(gridX, gridY) || this.isEndPos(gridX, gridY);
     },
-    shortSecondFunction: function(a,b,c,d)
+    displayGraph: function(a,b,c,d)
     {
            var chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
@@ -644,7 +619,6 @@ $.extend(Controller, {
       });
       chart.render();
       document.getElementById('graph').style.display='block';
-        console.log('seconf function called');
     }
 
 });
