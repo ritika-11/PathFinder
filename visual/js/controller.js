@@ -211,28 +211,52 @@ $.extend(Controller, {
         }, View.nodeColorizeEffect.duration * 1.2);
         // => ready
     },
-      oncompare:function()
+    oncompare:function()
     {
-        
-         setTimeout(function() {
-         var finderAStar = new Pf.AStarFinder({comparison:true});
-         var finderBestFirst = new Pf.BestFirstFinder({comparison:true});
-         var finderBreadthFirst = new Pf.BreadthFirstFinder({comparison:true});
-         var finderDijkstra = new Pf.DijkstraFinder({comparison:true});
+        var gridCopyAStar = this.grid.clone();
+        var gridCopyBestFirst = this.grid.clone();
+        var gridCopyBreadthFirst = this.grid.clone();
+        var gridCopyDijkstra = this.grid.clone();
+        var finderAStar = new Pf.AStarFinder({comparison:true});
+        var finderBestFirst = new Pf.BestFirstFinder({comparison:true});
+        var finderBreadthFirst = new Pf.BreadthFirstFinder({comparison:true});
+        var finderDijkstra = new Pf.DijkstraFinder({comparison:true});
 
-        var operationsAStar = finderAStar.findPath(Controller.startX,Controller.startY,Controller.endX,Controller.endY,Controller.grid);
-        var operationsBestFirst = finderBestFirst.findPath(Controller.startX,Controller.startY,Controller.endX,Controller.endY,Controller.grid,Controller.end);
-        var operationsBreadthFirst = finderBreadthFirst.findPath(Controller.startX,Controller.startY,Controller.endX,Controller.endY,Controller.grid,Controller.end);
-        var operationsDijkstra = finderDijkstra.findPath(Controller.startX,Controller.startY,Controller.endX,Controller.endY,Controller.grid,Controller.end);
+        var operationsAStar = finderAStar.findPath(this.startX,this.startY,this.end[0].x,this.end[0].y,gridCopyAStar);
+        var operationsBestFirst = finderBestFirst.findPath(this.startX,this.startY,this.endX,this.endY,gridCopyBestFirst,this.end);
+        var operationsBreadthFirst = finderBreadthFirst.findPath(this.startX,this.startY,this.endX,this.endY,gridCopyBreadthFirst,this.end);
+        var operationsDijkstra = finderDijkstra.findPath(this.startX,this.startY,this.endX,this.endY,gridCopyDijkstra,this.end);
         
 
-         console.log(operationsAStar);
-         console.log(operationsBestFirst);
-         console.log(operationsBreadthFirst);
-         console.log(operationsDijkstra);
+        console.log(operationsAStar);
+        console.log(operationsBestFirst);
+        console.log(operationsBreadthFirst);
+        console.log(operationsDijkstra);
         
-         Controller.shortSecondFunction(operationsAStar,operationsBestFirst,operationsBreadthFirst,operationsDijkstra);
-    }, 5000);
+    //      setTimeout(function() {
+    //     var gridCopyAStar = Controller.grid.clone();
+    //     var gridCopyBestFirst = Controller.grid.clone();
+    //     var gridCopyBreadthFirst = Controller.grid.clone();
+    //     var gridCopyDijkstra = Controller.grid.clone();
+    //     var finderAStar = new Pf.AStarFinder({comparison:true});
+    //     var finderBestFirst = new Pf.BestFirstFinder({comparison:true});
+    //     var finderBreadthFirst = new Pf.BreadthFirstFinder({comparison:true});
+    //     var finderDijkstra = new Pf.DijkstraFinder({comparison:true});
+
+    //     var operationsAStar = finderAStar.findPath(Controller.startX,Controller.startY,Controller.end[0].x,Controller.end[0].y,gridCopyAStar);
+    //     var operationsBestFirst = finderBestFirst.findPath(Controller.startX,Controller.startY,Controller.endX,Controller.endY,gridCopyBestFirst,Controller.end);
+    //     var operationsBreadthFirst = finderBreadthFirst.findPath(Controller.startX,Controller.startY,Controller.endX,Controller.endY,gridCopyBreadthFirst,Controller.end);
+    //     var operationsDijkstra = finderDijkstra.findPath(Controller.startX,Controller.startY,Controller.endX,Controller.endY,gridCopyDijkstra,Controller.end);
+        
+
+    //      console.log(operationsAStar);
+    //      console.log(operationsBestFirst);
+    //      console.log(operationsBreadthFirst);
+    //      console.log(operationsDijkstra);
+        
+    //      Controller.shortSecondFunction(operationsAStar,operationsBestFirst,operationsBreadthFirst,operationsDijkstra);
+    // }, 5000);
+    this.shortSecondFunction(operationsAStar,operationsBestFirst,operationsBreadthFirst,operationsDijkstra);
 
     },
 
