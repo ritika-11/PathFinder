@@ -159,43 +159,56 @@ Grid.prototype.getNeighbors = function(node, diagonalMovement) {
     var x = node.x,
         y = node.y,
         neighbors = [],
+        s0 = false, d0 = false,
+        s1 = false, d1 = false,
+        s2 = false, d2 = false,
+        s3 = false, d3 = false,
         nodes = this.nodes;
 
     // ↑
     if (this.isWalkableAt(x, y - 1)) {
         neighbors.push(nodes[y - 1][x]);
+        s0 = true;
     }
     // →
     if (this.isWalkableAt(x + 1, y)) {
         neighbors.push(nodes[y][x + 1]);
+        s1 = true;
     }
     // ↓
     if (this.isWalkableAt(x, y + 1)) {
         neighbors.push(nodes[y + 1][x]);
+        s2 = true;
     }
     // ←
     if (this.isWalkableAt(x - 1, y)) {
         neighbors.push(nodes[y][x - 1]);
+        s3 = true;
     }
 
     if (diagonalMovement === false) {
         return neighbors;
     }
 
+    d0 = s3 || s0;
+    d1 = s0 || s1;
+    d2 = s1 || s2;
+    d3 = s2 || s3;
+
     // ↖
-    if (this.isWalkableAt(x - 1, y - 1)) {
+    if (d0 && this.isWalkableAt(x - 1, y - 1)) {
         neighbors.push(nodes[y - 1][x - 1]);
     }
     // ↗
-    if (this.isWalkableAt(x + 1, y - 1)) {
+    if (d1 && this.isWalkableAt(x + 1, y - 1)) {
         neighbors.push(nodes[y - 1][x + 1]);
     }
     // ↘
-    if (this.isWalkableAt(x + 1, y + 1)) {
+    if (d2 && this.isWalkableAt(x + 1, y + 1)) {
         neighbors.push(nodes[y + 1][x + 1]);
     }
     // ↙
-    if (this.isWalkableAt(x - 1, y + 1)) {
+    if (d3 && this.isWalkableAt(x - 1, y + 1)) {
         neighbors.push(nodes[y + 1][x - 1]);
     }
 
