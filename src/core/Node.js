@@ -23,6 +23,8 @@ function Node(x, y, walkable) {
      * @type boolean
      */
     this.walkable = (walkable === undefined ? true : walkable);
+
+    this.countu=0;
 }
 
 module.exports = Node;

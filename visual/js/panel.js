@@ -67,6 +67,7 @@ var Panel = {
                 finder = new Pf.AStarFinder({
                     allowDiagonal: allowDiagonal,
                     heuristic: Pf.Heuristic[heuristic],
+                    multiplePaths:false,
                 });
             //}
             break;
@@ -87,7 +88,8 @@ var Panel = {
             // } else {
                 finder = new Pf.BreadthFirstFinder({
                     allowDiagonal: allowDiagonal,
-                    dontCrossCorners: dontCrossCorners
+                    dontCrossCorners: dontCrossCorners,
+                    multiplePaths:false,
                 });
             //}
             break;
@@ -111,7 +113,8 @@ var Panel = {
                 finder = new Pf.BestFirstFinder({
                     allowDiagonal: allowDiagonal,
                     dontCrossCorners: dontCrossCorners,
-                    heuristic: Pf.Heuristic[heuristic]
+                    heuristic: Pf.Heuristic[heuristic],
+                    multiplePaths:false,
                 });
             //}
             break;
@@ -133,7 +136,8 @@ var Panel = {
             // } else {
                 finder = new Pf.DijkstraFinder({
                     allowDiagonal: allowDiagonal,
-                    dontCrossCorners: dontCrossCorners
+                    dontCrossCorners: dontCrossCorners,
+                    multiplePaths:false,
                 });
             //}
             break;
@@ -190,7 +194,7 @@ var Panel = {
         //       heuristic: PF.Heuristic[heuristic],
         //       diagonalMovement: PF.DiagonalMovement.Never
         //     });
-        //     break;
+             break;
         case 'ida_header':
             this.toggleDisabled = true;
             allowDiagonal = typeof $('#ida_section ' +
@@ -216,6 +220,14 @@ var Panel = {
             });
 
             break;
+
+        case 'k_paths_header':
+            finder = new Pf.KShortestPathFinder({
+                allowDiagonal:allowDiagonal,
+                multiplePaths:true,
+            });
+            break;
+
         }
 
         return finder;

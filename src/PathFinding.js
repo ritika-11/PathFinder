@@ -10,4 +10,5 @@ module.exports = {
     'DijkstraFinder'            : require('./finders/DijkstraFinder'),
     'IDAStarFinder'             : require('./finders/IDAStarFinder'),
     'ThetaStarFinder'           : require('./finders/ThetaStarFinder'),
+    'KShortestPathFinder'       : require('./finders/KShortestPathFinder'),
 };
