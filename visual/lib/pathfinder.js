@@ -1492,6 +1492,7 @@ var BinaryHeap = require('@tyriar/binary-heap');
 function KShortestPathFinder(opt) {
    opt = opt || {};
    this.allowDiagonal = opt.allowDiagonal||true;
+   this.K =opt.K||3;
 }
 
 KShortestPathFinder.prototype.findPath = function(srcX,srcY,destX,destY,grid) {
@@ -1503,7 +1504,6 @@ var columns = grid.nodes[0].length;
 
 var paths = new Array();
 var bh = new BinaryHeap();
-var K = 3;
 var countDest = grid.getNodeAt(destX,destY).countu;
 
 var endPoints = {
@@ -1513,36 +1513,25 @@ var endPoints = {
    destY:destY,
 };
 
-console.log('endPoints are');
-console.log(endPoints);
-
 
 bh.insert(0,[{x:srcX,y:srcY}]);
 
- while(!bh.isEmpty()&&countDest<K)
+ while(!bh.isEmpty()&&countDest<this.K)
  {
  	var val = bh.extractMinimum();
- 	console.log(val);
 
  	var currentCost = val.key;
  	var currentValue = val.value;
- 	// var currentValueY = val.value.y;
-
- 	console.log(currentValue);
- 	//console.log(currentValueY);
 
  	var currentNode = currentValue[currentValue.length-1]; 
- 	console.log('currentnode is');
- 	console.log(currentNode);
-
+ 	
  	grid.getNodeAt(currentNode.x,currentNode.y).countu = grid.getNodeAt(currentNode.x,currentNode.y).countu+1;
-    console.log(grid.getNodeAt(currentNode.x,currentNode.y).countu);
  	if(currentNode.x==destX&&currentNode.y==destY)
  	{
  		paths.push(currentValue);
  	}
 
- 	if(grid.getNodeAt(currentNode.x,currentNode.y).countu<=K)
+ 	if(grid.getNodeAt(currentNode.x,currentNode.y).countu<=this.K)
  	{
       
        var neighbours = this.getNeighbours(currentNode.x,currentNode.y,grid,this.allowDiagonal); 
@@ -1559,7 +1548,7 @@ bh.insert(0,[{x:srcX,y:srcY}]);
  }
 
  var returnValue=new Array();
- for(var i=0;i<K;i++)
+ for(var i=0;i<this.K;i++)
  {
  	var pathLength1= paths[i].length;
  	var path1= paths[i];
@@ -1570,8 +1559,6 @@ bh.insert(0,[{x:srcX,y:srcY}]);
  	}
  	returnValue.push(newPath);
  }
-// console.log(paths);
-console.log(returnValue);
  return returnValue;
 
 }	
