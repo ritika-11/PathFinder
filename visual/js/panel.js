@@ -56,7 +56,9 @@ var Panel = {
             // weight = weight >= 1 ? weight : 1; /* if negative or 0, use 1 */
 
             heuristic = $('input[name=astar_heuristic]:checked').val();
-            // if (biDirectional) {
+            console.log('heuristic is');
+            console.log(heuristic);
+            // if (biDirectional)
             //     finder = new PF.BiAStarFinder({
             //         allowDiagonal: allowDiagonal,
             //         dontCrossCorners: dontCrossCorners,
@@ -190,9 +192,21 @@ var Panel = {
 
             break;
         case 'k_paths_header':
+         //      var options = document.getElementsByName('NumberOfpaths');
+         //       var paths;
+         //       for(var i = 0; i < options.length; i++){
+         //       if(options[i].checked){
+         //       paths = options[i].value;
+         //   }
+         // }
+           var paths = $('input[name=NumberOfPaths]:checked').val();
+
+             console.log('no of paths are');
+             console.log(paths);
              finder = new Pf.KShortestPathFinder({
                 allowDiagonal:allowDiagonal,
                 multiplePaths:true,
+                K:paths
             });
              break;
 
