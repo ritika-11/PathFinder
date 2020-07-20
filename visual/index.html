@@ -251,31 +251,34 @@
           </div>
         </div>
 
-        <!-- <h3 id="jump_point_header"><a href="#">Jump Point Search</a></h3>
-        <div id="jump_point_section" class="finder_section">
+        <h3 id="thetastar_header"><a href="#">Theta*</a></h3>
+        <div id="thetastar_section" class="finder_section">
           <header class="option_header">
-            <h3>Heuristic</h3>
+            <h6>Heuristic</h6>
           </header>
-          <div id="jump_point_heuristic" class="sub_options">
-            <input type="radio" name="jump_point_heuristic" value="manhattan" checked />
+          <div id="thetastar_heuristic" class="sub_options">
+            <input type="radio" name="thetastar_heuristic" value="manhattan" checked />
             <label class="option_label">Manhattan</label> <br>
-            <input type="radio" name="jump_point_heuristic" value="euclidean"/>
+            <input type="radio" name="thetastar_heuristic" value="euclidean"/>
             <label class="option_label">Euclidean</label> <br>
-            <input type="radio" name="jump_point_heuristic" value="octile"/>
-            <label class="option_label">Octile</label> <br>
-            <input type="radio" name="jump_point_heuristic" value="chebyshev"/>
-            <label class="option_label">Chebyshev</label> <br>
           </div>
           <header class="option_header">
-            <h3>Options</h3>
+            <h6>Options</h6>
           </header>
           <div class="optional sub_options">
-            <input type="checkbox" class="track_recursion" checked>
-            <label class="option_label">Visualize recursion</label> <br>
+            <input type="checkbox" class="allow_diagonal" checked>
+            <label class="option_label">Allow Diagonal</label> <br> <br> <br>
+            <!-- <input type="checkbox" class="bi-directional">
+            <label class="option_label">Bi-directional</label> <br>
+            <input type="checkbox" class="dont_cross_corners">
+            <label class="option_label">Don't Cross Corners</label> <br>
+            <input class="spinner" name="astar_weight" value="1">
+            <label class="option_label">Weight</label> <br> -->
           </div>
         </div>
+        </div>
 
-	      <h3 id="orth_jump_point_header"><a href="#">Orthogonal Jump Point Search</a></h3>
+	      <!-- <h3 id="orth_jump_point_header"><a href="#">Orthogonal Jump Point Search</a></h3>
         <div id="orth_jump_point_section" class="finder_section">
           <header class="option_header">
             <h3>Heuristic</h3>

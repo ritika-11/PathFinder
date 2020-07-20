@@ -138,6 +138,37 @@ var Panel = {
             //}
             break;
 
+        case 'thetastar_header':
+            this.toggleDisabled = true;
+            console.log(this.toggleDisabled);
+            allowDiagonal = typeof $('#thetastar_section ' +
+                                     '.allow_diagonal:checked').val() !== 'undefined';
+                                     console.log(allowDiagonal);
+            // biDirectional = typeof $('#astar_section ' +
+            //                          '.bi-directional:checked').val() !=='undefined';
+            // dontCrossCorners = typeof $('#astar_section ' +
+            //                          '.dont_cross_corners:checked').val() !=='undefined';
+
+            // /* parseInt returns NaN (which is falsy) if the string can't be parsed */
+            // weight = parseInt($('#astar_section .spinner').val()) || 1;
+            // weight = weight >= 1 ? weight : 1; /* if negative or 0, use 1 */
+
+            heuristic = $('input[name=thetastar_heuristic]:checked').val();
+            // if (biDirectional) {
+            //     finder = new PF.BiAStarFinder({
+            //         allowDiagonal: allowDiagonal,
+            //         dontCrossCorners: dontCrossCorners,
+            //         heuristic: PF.Heuristic[heuristic],
+            //         weight: weight
+            //     });
+            // } else {
+                finder = new Pf.ThetaStarFinder({
+                    allowDiagonal: allowDiagonal,
+                    heuristic: Pf.Heuristic[heuristic],
+                });
+            //}
+            break;
+
         // case 'jump_point_header':
         //     trackRecursion = typeof $('#jump_point_section ' +
         //                              '.track_recursion:checked').val() !== 'undefined';
