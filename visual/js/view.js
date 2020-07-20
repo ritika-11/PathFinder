@@ -304,7 +304,7 @@ var View = {
             else if(i==1)
                 style=this.pathStyle2;
             else if(i==2)
-                style==this.pathStyle3;
+                style=this.pathStyle3;
                       
             var temp = this.paper.path(svgPath).attr(style);
             this.paths.push(temp);      
