@@ -9,4 +9,5 @@ module.exports = {
     'BreadthFirstFinder'        : require('./finders/BreadthFirstFinder'),
     'DijkstraFinder'            : require('./finders/DijkstraFinder'),
     'IDAStarFinder'             : require('./finders/IDAStarFinder'),
+    'KShortestPathFinder'       : require('./finders/KShortestPathFinder'),
 };

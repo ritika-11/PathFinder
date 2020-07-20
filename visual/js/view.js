@@ -47,8 +47,16 @@ var View = {
         transform: 's1.2', // scale by 1.2x
         transformBack: 's1.0',
     },
-    pathStyle: {
+    pathStyle1: {
         stroke: 'yellow',
+        'stroke-width': 3,
+    },
+    pathStyle2: {
+        stroke: 'blue',
+        'stroke-width': 3,
+    },
+    pathStyle3: {
+        stroke: 'orange',
         'stroke-width': 3,
     },
     supportedOperations: ['opened', 'closed', 'tested'],
@@ -269,12 +277,39 @@ var View = {
             }
         }
     },
-    drawPath: function(path) {
+    drawPath: function(path,finderType) {
         if (!path.length) {
             return;
         }
-        var svgPath = this.buildSvgPath(path);
-        this.path = this.paper.path(svgPath).attr(this.pathStyle);
+        this.finderType=finderType;
+        this.paths = new Array();
+        this.path;
+        if(this.finderType=='KShortestPathFinder')
+        {
+            console.log(path.length);
+           for(var i=0;i<path.length;i++)
+           {
+            console.log('ghh');
+            var svgPath = this.buildSvgPath(path[i]);
+            console.log(i);
+            var style;
+            if(i==0)
+                style = this.pathStyle1;
+            else if(i==1)
+                style=this.pathStyle2;
+            else if(i==2)
+                style==this.pathStyle3;
+                      
+            var temp = this.paper.path(svgPath).attr(style);
+            this.paths.push(temp);      
+           }
+        }
+        else
+        {
+            var svgPath = this.buildSvgPath(path);
+            this.path = this.paper.path(svgPath).attr(this.pathStyle3);
+        }      
+
     },
     /**
      * Given a path, build its SVG represention.
@@ -293,7 +328,16 @@ var View = {
     },
     clearPath: function() {
         if (this.path) {
+            console.log('oh mama');
             this.path.remove();
+        }
+        if(this.paths)
+        {
+            console.log('go here');
+            for(var i=0;i<this.paths.length;i++)
+           {
+              this.paths[i].remove();   
+           }
         }
     },
     /**

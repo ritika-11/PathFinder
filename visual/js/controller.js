@@ -150,9 +150,20 @@ $.extend(Controller, {
                 this.end.splice(1, 1);
             }
         }
+
+        //  this.multiplePaths=false;
+        // if(finder instanceof KShortestPathFinder)
+        // {
+        //     this.multiplePaths=true;
+        // }
+
+       
         this.path = finder.findPath(
             this.startX, this.startY, this.end[0].x, this.end[0].y, grid, this.end
         );
+       
+        this.finderType =finder.constructor.name;
+
         this.operationCount = this.operations.length;
         timeEnd = window.performance ? performance.now() : Date.now();
         this.timeSpent = (timeEnd - timeStart).toFixed(4);
@@ -192,7 +203,9 @@ $.extend(Controller, {
             timeSpent:  this.timeSpent,
             operationCount: this.operationCount,
         });
-        View.drawPath(this.path);
+     
+         View.drawPath(this.path,this.finderType);
+         
         // => finished
     },
     onclear: function(event, from, to) {
