@@ -1961,8 +1961,8 @@ ThetaStarFinder.prototype.checkneighbour = function (x,y,cellDetails,foundDest,e
                         unexploredCellsSet.insert(cellDetails[y][x].f, {x:x,y:y}); 
                         grid.getNodeAt(x,y).opened=true;
                         this.operations++;
-                        grid.getNodeAt(xOriginal,yOriginal).opened=false;
-                        grid.getNodeAt(xOriginal,yOriginal).closed=false;
+                        // grid.getNodeAt(xOriginal,yOriginal).opened=false;
+                        // grid.getNodeAt(xOriginal,yOriginal).closed=false;
                     }
                 }
                 else {
@@ -2075,16 +2075,21 @@ ThetaStarFinder.prototype.lineOfSight = function(x1, y1, x2, y2, grid) {
                     error = error - ddx;
                     if((error + errorprev)<ddx) {
                         if(!this.isWalkable(grid, x, y - ystep)) {  return false;   }
+                        else {grid.getNodeAt(x, y - ystep).closed = true;}
                     }
                     else if((error + errorprev)>ddx) {
                         if(!this.isWalkable(grid, x - xstep, y)) {  return false;   }
+                        else {grid.getNodeAt(x - xstep, y).closed = true;}
                     }
                     else {
                         if(!this.isWalkable(grid, x, y - ystep)) {  return false;   }
+                        else {grid.getNodeAt(x, y - ystep).closed = true;}
                         if(!this.isWalkable(grid, x - xstep, y)) {  return false;   }
+                        else {grid.getNodeAt(x - xstep, y).closed = true;}
                     }
                 }
                 if(!this.isWalkable(grid, x, y)) {  return false;   }
+                else {grid.getNodeAt(x, y).closed = true;}
                 errorprev = error;
             }
         }
@@ -2099,16 +2104,21 @@ ThetaStarFinder.prototype.lineOfSight = function(x1, y1, x2, y2, grid) {
                 error = error - ddy;
                 if (error + errorprev < ddy){
                     if(!this.isWalkable(grid, x - xstep, y)) {  return false;   }
+                    else {grid.getNodeAt(x - xstep, y).closed = true;}
                 }
                 else if (error + errorprev > ddy) {
                     if(!this.isWalkable(grid, x, y - ystep)) {  return false;   }
+                    else {grid.getNodeAt(x, y - ystep).closed = true;}
                 }
                 else{
                     if(!this.isWalkable(grid, x, y - ystep)) {  return false;   }
+                    else {grid.getNodeAt(x, y - ystep).closed = true;}
                     if(!this.isWalkable(grid, x - xstep, y)) {  return false;   }
+                    else {grid.getNodeAt(x - xstep, y).closed = true;}
                 }
             }
             if(!this.isWalkable(grid, x, y)) {  return false;   }
+            else {grid.getNodeAt(x, y).closed = true;}
             errorprev = error;
             }
         }

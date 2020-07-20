@@ -8,14 +8,18 @@ var View = {
         normal: {
             fill: 'white',
             'stroke-opacity': 0.2, // the border
+            
+            //#B22222
         },
         blocked: {
             fill: 'grey',
             'stroke-opacity': 0.2,
+            opacity:1,
         },
         start: {
             fill: '#0d0',
             'stroke-opacity': 0.2,
+            opacity:1,
         },
         end: {
             fill: 'red',
@@ -23,12 +27,14 @@ var View = {
             opacity: 1,
         },
         opened: {
-            fill: '#98fb98',
+            fill: '#00FA9A',
             'stroke-opacity': 0.2,
+            opacity:1,
         },
         closed: {
             fill: '#afeeee',
             'stroke-opacity': 0.2,
+            opacity:1,
         },
         failed: {
             fill: '#ff8888',
@@ -56,7 +62,7 @@ var View = {
         'stroke-width': 3,
     },
     pathStyle3: {
-        stroke: 'orange',
+        stroke: 'black',
         'stroke-width': 3,
     },
     supportedOperations: ['opened', 'closed', 'tested'],
@@ -307,7 +313,7 @@ var View = {
         else
         {
             var svgPath = this.buildSvgPath(path);
-            this.path = this.paper.path(svgPath).attr(this.pathStyle3);
+            this.path = this.paper.path(svgPath).attr(this.pathStyle1);
         }      
 
     },
