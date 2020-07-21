@@ -35,7 +35,8 @@ bh.insert(0,[{x:srcX,y:srcY}]);
  	var currentValue = val.value;
 
  	var currentNode = currentValue[currentValue.length-1]; 
- 	
+ 	grid.getNodeAt(currentNode.x,currentNode.y).closed=true; 
+
  	grid.getNodeAt(currentNode.x,currentNode.y).countu = grid.getNodeAt(currentNode.x,currentNode.y).countu+1;
  	if(currentNode.x==destX&&currentNode.y==destY)
  	{
@@ -52,6 +53,7 @@ bh.insert(0,[{x:srcX,y:srcY}]);
        	var first = [];
        	Array.prototype.push.apply(first, currentValue);
        	first.push({x:neighbours[i][0],y:neighbours[i][1]});
+        grid.getNodeAt(neighbours[i][0],neighbours[i][1]).opened=true;  
        	bh.insert(newCost,first);
        }
  	}
