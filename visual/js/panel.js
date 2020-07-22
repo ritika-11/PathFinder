@@ -231,6 +231,7 @@ var Panel = {
          //       paths = options[i].value;
          //   }
          // }
+         this.toggleDisabled = true;
            var paths = $('input[name=NumberOfPaths]:checked').val();
 
              console.log('no of paths are');
