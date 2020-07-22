@@ -5,6 +5,7 @@ var Util = require('../core/Util');
  * @constructor
  * @param {Object} opt
  * @param {boolean} opt.allowDiagonal Whether diagonal movement is allowed.
+ * @param {boolean} opt.comparison Whether the algo needs to be run for comparison
  */
 function DijkstraFinder(opt) {
     opt = opt || {};

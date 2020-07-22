@@ -145,23 +145,18 @@ $.extend(Controller, {
 
         timeStart = window.performance ? performance.now() : Date.now();
         grid = this.grid.clone();
+
         if(this.end.length<1) {
             alert("Please give atleast one end point.");
             return;
         }
+
         if(Panel.toggleDisabled) {
             while(this.end.length>1) {
                 View.setEndPos1(this.end[1].x, this.end[1].y);
                 this.end.splice(1, 1);
             }
         }
-
-        //  this.multiplePaths=false;
-        // if(finder instanceof KShortestPathFinder)
-        // {
-        //     this.multiplePaths=true;
-        // }
-
        
         this.path = finder.findPath(
             this.startX, this.startY, this.end[0].x, this.end[0].y, grid, this.end
@@ -176,7 +171,6 @@ $.extend(Controller, {
         this.loop();
         // => searching
     },
-    //[{x:this.endX, y:this.endY}, {x:this.ritika, y:this.rutuja}]
     onrestart: function() {
         // When clearing the colorized nodes, there may be
         // nodes still animating, which is an asynchronous procedure.
@@ -262,7 +256,7 @@ $.extend(Controller, {
         Controller.clearFootprints();
 
         this.displayGraph(operationsAStar,operationsBestFirst,operationsBreadthFirst,operationsDijkstra,operationsThetaStar);
-
+        // => ready
     },
 
     /**
@@ -480,7 +474,6 @@ $.extend(Controller, {
             gridX = coord[0],
             gridY = coord[1],
             grid  = this.grid;
-        console.log(Panel.toggleDisabled);
 
         if (this.can('dragStart') && this.isStartPos(gridX, gridY)) {
             this.dragStart();
@@ -622,34 +615,33 @@ $.extend(Controller, {
     isStartOrEndPos: function(gridX, gridY) {
         return this.isStartPos(gridX, gridY) || this.isEndPos(gridX, gridY);
     },
-    displayGraph: function(a,b,c,d,e)
-    {
+    displayGraph: function(a,b,c,d,e) {
         var chart1 = new CanvasJS.Chart("chartContainer1", {
-        animationEnabled: true,
-         theme: "light2",
-         width:700,
-          title:{
-        text: "Algorithm Comparison"
-          },
-         axisY:{
-        includeZero: true,
-        title:'No of Operations'
-          },
-          axisX:{
-        title:'Algorithm'
-          },
-        data: [{        
-        type: "column",
-        indexLabelFontSize: 16,
-        dataPoints: [
-            { y: a.ops, label:'AStarFinder'},
-            { y: b.ops, label:'Best First Search'},
-            { y: c.ops, label:'Breadth First Search' },
-            { y: d.ops, label:'Dijkstra' },
-            { y: e.ops, label:'Theta*' },
-        ]
-       }]
-      });
+            animationEnabled: true,
+            theme: "light2",
+            width:700,
+            title:{
+                text: "Algorithm Comparison"
+            },
+            axisY:{
+                includeZero: true,
+                title:'No of Operations'
+            },
+            axisX:{
+                title:'Algorithm'
+            },
+            data: [{        
+                type: "column",
+                indexLabelFontSize: 16,
+                dataPoints: [
+                    { y: a.ops, label:'AStarFinder'},
+                    { y: b.ops, label:'Best First Search' },
+                    { y: c.ops, label:'Breadth First Search' },
+                    { y: d.ops, label:'Dijkstra' },
+                    { y: e.ops, label:'Theta*' },
+                ]
+            }]
+        });
 
         var lengthAStar = Pf.Util.pathLength(a.path);
         var lengthBestFirstSearch = Pf.Util.pathLength(b.path);
@@ -658,35 +650,35 @@ $.extend(Controller, {
         var lengthThetaStar = Pf.Util.pathLength(e.path);
 
         var chart2 = new CanvasJS.Chart("chartContainer2", {
-        animationEnabled: true,
-         theme: "light2",
-         width:700,
-          title:{
-        text: "Algorithm Comparison"
-          },
-         axisY:{
-        includeZero: true,
-        title:'PathLength'
-          },
-          axisX:{
-        title:'Algorithm'
-          },
-        data: [{        
-        type: "column",
-        indexLabelFontSize: 16,
-        dataPoints: [
-            { y: lengthAStar, label:'AStarFinder'},
-            { y: lengthBestFirstSearch, label:'Best First Search'},
-            { y: lengthBreadthSearch, label:'Breadth First Search' },
-            { y: lengthDijkstra, label:'Dijkstra' },
-            { y: lengthThetaStar, label:'Theta*' },
-        ]
-       }]
-      });
+            animationEnabled: true,
+            theme: "light2",
+            width:700,
+            title:{
+                text: "Algorithm Comparison"
+            },
+            axisY:{
+                includeZero: true,
+                title:'PathLength'
+            },
+            axisX:{
+                title:'Algorithm'
+            },
+            data: [{        
+                type: "column",
+                indexLabelFontSize: 16,
+                dataPoints: [
+                    { y: lengthAStar, label:'AStarFinder'},
+                    { y: lengthBestFirstSearch, label:'Best First Search'},
+                    { y: lengthBreadthSearch, label:'Breadth First Search' },
+                    { y: lengthDijkstra, label:'Dijkstra' },
+                    { y: lengthThetaStar, label:'Theta*' },
+                ]
+            }]
+        });
 
-      chart1.render();
-      chart2.render();
-      document.getElementById('graph').style.display='block';
+        chart1.render();
+        chart2.render();
+        document.getElementById('graph').style.display='block';
     }
 
 });

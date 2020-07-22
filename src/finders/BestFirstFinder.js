@@ -8,6 +8,7 @@ var Heuristic  = require('../core/Heuristic');
  * @param {boolean} opt.allowDiagonal Whether diagonal movement is allowed.
  * @param {function} opt.heuristic Heuristic function to estimate the distance
  *     (defaults to manhattan).
+ * @param {boolean} opt.comparison Whether the algo needs to be run for comparison
  */
 function BestFirstFinder(opt) {
     opt = opt || {};
