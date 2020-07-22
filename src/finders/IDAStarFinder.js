@@ -4,6 +4,7 @@ function IDAStarFinder(opt) {
    this.allowDiagonal = opt.allowDiagonal;
    this.heuristic = opt.heuristic;
    this.timeLimit = opt.timeLimit || Number.MAX_VALUE;
+   this.visualize_recursion = opt.visualize_recursion&&true;
 }
 
 IDAStarFinder.prototype.findPath = function(srcX,srcY,destX,destY,grid) {
@@ -47,7 +48,7 @@ var endPoints = {
   var newThreshold;
       do {      
             // Start Search
-            newThreshold = recursion(path,0, threshold,grid,cellDetails,endPoints,this.allowDiagonal);
+            newThreshold = recursion(path,0, threshold,grid,cellDetails,endPoints,this.allowDiagonal,this.visualize_recursion);
             // Check If Goal Node Was Found
             if (newThreshold == 0)
             {
@@ -70,7 +71,7 @@ var endPoints = {
 
 };
 
-function recursion(path,cost,threshold,grid,cellDetails,endPoints,allowDiagonal)
+function recursion(path,cost,threshold,grid,cellDetails,endPoints,allowDiagonal,visualize_recursion)
 {    
   
    var currentNode = path[path.length-1];
@@ -93,6 +94,8 @@ function recursion(path,cost,threshold,grid,cellDetails,endPoints,allowDiagonal)
       if(!path.includes(successors[i]))
       {
         path.push(successors[i]);
+        if(visualize_recursion)
+          grid.getNodeAt(successors[i].x,successors[i].y).opened=true;       
          var newCost= getCost(currentNode.x,currentNode.y,successors[i].x,successors[i].y);
          var temp = recursion(path,currentNode.g+newCost,threshold,grid,cellDetails,endPoints,allowDiagonal);
         if(temp==0)
@@ -100,6 +103,9 @@ function recursion(path,cost,threshold,grid,cellDetails,endPoints,allowDiagonal)
         if(temp<minThreshold)
           minThreshold= temp;
         path.pop();
+        if(visualize_recursion)
+          grid.getNodeAt(successors[i].x,successors[i].y).closed=true;
+        
       }
     }
 

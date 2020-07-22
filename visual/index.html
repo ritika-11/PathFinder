@@ -188,6 +188,7 @@
           <div id="ida_heuristic" class="sub_options">
             <input type="radio" name="ida_heuristic" value="euclidean" checked/>
             <label class="option_label">Euclidean</label> <br>
+           
             
           </div>
           <header class="option_header">
@@ -196,6 +197,8 @@
           <div class="optional sub_options">
             <input type="checkbox" class="allow_diagonal" checked>
             <label class="option_label">Allow Diagonal</label> <br> <br>
+            <input type="checkbox" class="visualize_recursion" checked>
+            <label class="option_label">Visualize Recursion</label> <br> <br>
             <!-- <input type="checkbox" class="dont_cross_corners">
             <label class="option_label">Don't Cross Corners</label> <br>
             <input class="spinner" name="astar_weight" value="1">
@@ -297,19 +300,22 @@
           <header class="option_header">
             <h6>Options</h6>
           </header>
-          <div class="optional sub_options">
-            <input type="checkbox" class="allow_diagonal" checked>
-            <label class="option_label">Allow Diagonal</label> <br> <br>
+          <div id="KShortestPaths" class="sub_options">
             <input type="radio" name="NumberOfPaths" value="1"/>
             <label class="option_label">1</label> <br>
             <input type="radio" name="NumberOfPaths" value="2"/>
             <label class="option_label">2</label> <br>
             <input type="radio" name="NumberOfPaths" value="3" checked/>
             <label class="option_label">3</label> <br>
-            <!-- <input type="checkbox" class="bi-directional">
-            <label class="option_label">Bi-directional</label> <br>
-            <input type="checkbox" class="dont_cross_corners">
-            <label class="option_label">Don't Cross Corners</label> <br> -->
+          </div>
+          <header class="option_header">
+            <h6>Optional Sub Options</h6>
+          </header>
+          <div class="optional sub_options">
+             <input type="checkbox" class="allow_diagonal" checked>
+            <label class="option_label">Allow Diagonal</label> <br> <br>
+            <input type="checkbox" class="visualize_recursion" checked>
+            <label class="option_label">Visualize Recursion</label> <br> <br>
           </div>
         </div>
 	      <!-- <h3 id="orth_jump_point_header"><a href="#">Orthogonal Jump Point Search</a></h3>
@@ -373,6 +379,8 @@
       </label>
       <label class="toggle_label1">Destination</label> <br> <br>
       <button id="button4" class="control_button">Compare</button>
+      <button id="button5" onclick="displayInstructions()"style="width:120px;"class="control_button">Show Instructions</button>
+
     </div>
 
     <div id="stats"></div>
@@ -381,13 +389,10 @@
       Project Hosted on <a href="https://github.com/ritika-11/PathFinder">Github</a>
     </footer>
 <script>
-  function onclick1()
+  
+  function displayInstructions()
   {
-    document.getElementById('left').style.display='none';
-    if(document.getElementById('right').style.display=='none')
-    {
-      document.getElementById('graph').style.display='none'
-    }
+    document.getElementById('instructions_panel').style.display='block';
   }
 </script> 
   </body>

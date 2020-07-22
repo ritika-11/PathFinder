@@ -31,7 +31,7 @@ var Panel = {
      * TODO: clean up this messy code.
      */
     getFinder: function() {
-        var finder, selected_header, heuristic, allowDiagonal, biDirectional, dontCrossCorners, weight, trackRecursion, timeLimit;
+        var finder, selected_header, heuristic, allowDiagonal, biDirectional, dontCrossCorners, weight, trackRecursion, timeLimit,visualize_recursion;
         
         selected_header = $(
             '#algorithm_panel ' +
@@ -201,6 +201,9 @@ var Panel = {
             this.toggleDisabled = true;
             allowDiagonal = typeof $('#ida_section ' +
                                      '.allow_diagonal:checked').val() !== 'undefined';
+            visualize_recursion = typeof $('#ida_section ' +
+                                     '.visualize_recursion:checked').val() !== 'undefined';
+
             // dontCrossCorners = typeof $('#ida_section ' +
             //                          '.dont_cross_corners:checked').val() !=='undefined';
             // trackRecursion = typeof $('#ida_section ' +
@@ -219,26 +222,28 @@ var Panel = {
             finder = new Pf.IDAStarFinder({
               allowDiagonal: allowDiagonal,
               heuristic: Pf.Heuristic[heuristic],
+              visualize_recursion:visualize_recursion,
             });
 
             break;
 
         case 'k_paths_header':
-         //      var options = document.getElementsByName('NumberOfpaths');
-         //       var paths;
-         //       for(var i = 0; i < options.length; i++){
-         //       if(options[i].checked){
-         //       paths = options[i].value;
-         //   }
-         // }
+           this.toggleDisabled = true;
+           allowDiagonal = typeof $('#k_paths_section ' +
+                                     '.allow_diagonal:checked').val() !== 'undefined';
+           visualize_recursion = typeof $('#k_paths_section ' +
+                                     '.visualize_recursion:checked').val() !== 'undefined';
            var paths = $('input[name=NumberOfPaths]:checked').val();
 
-             console.log('no of paths are');
+             console.log(allowDiagonal);
+             console.log(visualize_recursion);
              console.log(paths);
+
              finder = new Pf.KShortestPathFinder({
                 allowDiagonal:allowDiagonal,
                 multiplePaths:true,
-                K:paths
+                K:paths,
+                visualize_recursion:visualize_recursion
             });
             break;
 

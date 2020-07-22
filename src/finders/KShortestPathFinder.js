@@ -2,13 +2,15 @@ var BinaryHeap = require('@tyriar/binary-heap');
 
 function KShortestPathFinder(opt) {
    opt = opt || {};
-   this.allowDiagonal = opt.allowDiagonal||true;
+   this.allowDiagonal = opt.allowDiagonal;
    this.K =opt.K||3;
+   this.visualize_recursion =opt.visualize_recursion;
 }
 
 KShortestPathFinder.prototype.findPath = function(srcX,srcY,destX,destY,grid) {
 if(srcX==destX&&srcY==destY)
 	return "already present at destination";
+
 
 var rows = grid.nodes.length;
 var columns = grid.nodes[0].length;
@@ -35,7 +37,8 @@ bh.insert(0,[{x:srcX,y:srcY}]);
  	var currentValue = val.value;
 
  	var currentNode = currentValue[currentValue.length-1]; 
- 	grid.getNodeAt(currentNode.x,currentNode.y).closed=true; 
+  if(this.visualize_recursion)
+    grid.getNodeAt(currentNode.x,currentNode.y).closed=true; 
 
  	grid.getNodeAt(currentNode.x,currentNode.y).countu = grid.getNodeAt(currentNode.x,currentNode.y).countu+1;
  	if(currentNode.x==destX&&currentNode.y==destY)
@@ -53,7 +56,8 @@ bh.insert(0,[{x:srcX,y:srcY}]);
        	var first = [];
        	Array.prototype.push.apply(first, currentValue);
        	first.push({x:neighbours[i][0],y:neighbours[i][1]});
-        grid.getNodeAt(neighbours[i][0],neighbours[i][1]).opened=true;  
+        if(this.visualize_recursion)
+          grid.getNodeAt(neighbours[i][0],neighbours[i][1]).opened=true;        
        	bh.insert(newCost,first);
        }
  	}
