@@ -231,6 +231,15 @@ $.extend(Controller, {
     },
     oncompare:function()
     {
+        if(this.end.length<1) {
+            alert("Please give atleast one end point.");
+            return;
+        }
+        while(this.end.length>1) {
+            View.setEndPos1(this.end[1].x, this.end[1].y);
+            this.end.splice(1, 1);
+        }
+
         var gridCopyAStar = this.grid.clone();
         var gridCopyBestFirst = this.grid.clone();
         var gridCopyBreadthFirst = this.grid.clone();
@@ -252,7 +261,7 @@ $.extend(Controller, {
         Controller.clearOperations();
         Controller.clearFootprints();
 
-    this.displayGraph(operationsAStar,operationsBestFirst,operationsBreadthFirst,operationsDijkstra,operationsThetaStar);
+        this.displayGraph(operationsAStar,operationsBestFirst,operationsBreadthFirst,operationsDijkstra,operationsThetaStar);
 
     },
 
@@ -278,7 +287,7 @@ $.extend(Controller, {
             callback: $.proxy(this.reset, this),
         },{
             id: 4,
-            text: 'Compare',
+            text: 'Compare Algorithms',
             enabled: true,
             callback: $.proxy(this.compare, this),
         });
@@ -325,7 +334,7 @@ $.extend(Controller, {
         },
          {
             id: 4,
-            text: 'Compare',
+            text: 'Compare Algorithms',
             enabled: true,
             callback: $.proxy(this.compare, this),
         });
@@ -346,7 +355,7 @@ $.extend(Controller, {
         },
          {
             id: 4,
-            text: 'Compare',
+            text: 'Compare Algorithms',
             enabled: true,
             callback: $.proxy(this.compare, this),
         });
@@ -366,7 +375,7 @@ $.extend(Controller, {
         },
          {
             id: 4,
-            text: 'Compare',
+            text: 'Compare Algorithms',
             enabled: true,
             callback: $.proxy(this.compare, this),
         });

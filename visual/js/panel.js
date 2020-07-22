@@ -16,7 +16,7 @@ var Panel = {
             $('#instructions_panel').slideUp();
         });
         $('#play_panel').css({
-            top: $algo.offset().top + $algo.outerHeight() + 20
+            top: $algo.offset().top + $algo.outerHeight() + 50
         });
         $('#button2').attr('disabled', 'disabled');
     },

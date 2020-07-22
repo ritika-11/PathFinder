@@ -146,7 +146,7 @@
       Toggle the switch <span class="red">red</span> to set the end positions. <br>
       Choose an algorithm from the right-hand panel. <br>
       Click Start Search in the lower-right corner to start the animation.<br>
-      Give a set of obstacles and press compare button to compare algorithms on the basis of number of operations required in each operation.<br>
+      Give a set of obstacles and press compare button to compare algorithms.<br>
     </div>
 
     <div id="algorithm_panel" class="panel right_panel">
@@ -170,7 +170,7 @@
           </header>
           <div class="optional sub_options">
             <input type="checkbox" class="allow_diagonal" checked>
-            <label class="option_label">Allow Diagonal</label> <br> <br> <br>
+            <label class="option_label">Allow Diagonal</label> <br> <br> <br> <br>
             <!-- <input type="checkbox" class="bi-directional">
             <label class="option_label">Bi-directional</label> <br>
             <input type="checkbox" class="dont_cross_corners">
@@ -196,7 +196,7 @@
           </header>
           <div class="optional sub_options">
             <input type="checkbox" class="allow_diagonal" checked>
-            <label class="option_label">Allow Diagonal</label> <br> <br>
+            <label class="option_label">Allow Diagonal</label> <br>
             <input type="checkbox" class="visualize_recursion" checked>
             <label class="option_label">Visualize Recursion</label> <br> <br>
             <!-- <input type="checkbox" class="dont_cross_corners">
@@ -217,11 +217,14 @@
           </header>
           <div class="optional sub_options">
             <input type="checkbox" class="allow_diagonal" checked>
-            <label class="option_label">Allow Diagonal</label> <br> <br>
+            <label class="option_label">Allow Diagonal</label>
             <!-- <input type="checkbox" class="bi-directional">
             <label class="option_label">Bi-directional</label> <br>
             <input type="checkbox" class="dont_cross_corners">
             <label class="option_label">Don't Cross Corners</label> <br> -->
+          </div>
+          <div>
+          <p style="text-align:center;">Try adding multiple end points.</p>
           </div>
         </div>
 
@@ -246,11 +249,14 @@
           </header>
           <div class="optional sub_options">
             <input type="checkbox" class="allow_diagonal" checked>
-            <label class="option_label">Allow Diagonal</label> <br>
+            <label class="option_label">Allow Diagonal</label> <br> <br>
             <!-- <input type="checkbox" class="bi-directional">
             <label class="option_label">Bi-directional</label> <br>
             <input type="checkbox" class="dont_cross_corners">
             <label class="option_label">Don't Cross Corners</label> <br> -->
+          </div>
+          <div style="text-align:center;">
+            Try adding multiple end points.
           </div>
         </div>
 
@@ -261,12 +267,15 @@
           </header>
           <div class="optional sub_options">
             <input type="checkbox" class="allow_diagonal" checked>
-            <label class="option_label">Allow Diagonal</label> <br> <br>
+            <label class="option_label">Allow Diagonal</label>
             <!-- <input type="checkbox" class="bi-directional">
             <label class="option_label">Bi-directional</label> <br>
             <input type="checkbox" class="dont_cross_corners">
             <label class="option_label">Don't Cross Corners</label> <br> -->
           </div>
+          <div>
+            <p style="text-align:center;">Try adding multiple end points.</p>
+            </div>
         </div>
 
         <h3 id="thetastar_header"><a href="#">Theta*</a></h3>
@@ -298,7 +307,7 @@
         <h3 id="k_paths_header"><a href="#">KShortestPaths</a></h3>
         <div id="k_paths_section" class="finder_section">
           <header class="option_header">
-            <h6>Options</h6>
+            <h6>Number of Paths</h6>
           </header>
           <div id="KShortestPaths" class="sub_options">
             <input type="radio" name="NumberOfPaths" value="1"/>
@@ -306,16 +315,16 @@
             <input type="radio" name="NumberOfPaths" value="2"/>
             <label class="option_label">2</label> <br>
             <input type="radio" name="NumberOfPaths" value="3" checked/>
-            <label class="option_label">3</label> <br>
+            <label class="option_label">3</label> <br> 
           </div>
           <header class="option_header">
-            <h6>Optional Sub Options</h6>
+            <h6>Options</h6>
           </header>
           <div class="optional sub_options">
              <input type="checkbox" class="allow_diagonal" checked>
-            <label class="option_label">Allow Diagonal</label> <br> <br>
+            <label class="option_label">Allow Diagonal</label> <br>
             <input type="checkbox" class="visualize_recursion" checked>
-            <label class="option_label">Visualize Recursion</label> <br> <br>
+            <label class="option_label">Visualize Recursion</label> <br>
           </div>
         </div>
 	      <!-- <h3 id="orth_jump_point_header"><a href="#">Orthogonal Jump Point Search</a></h3>
@@ -378,8 +387,8 @@
         <span class="slider round"></span>
       </label>
       <label class="toggle_label1">Destination</label> <br> <br>
-      <button id="button4" class="control_button">Compare</button>
-      <button id="button5" onclick="displayInstructions()"style="width:120px;"class="control_button">Show Instructions</button>
+      <button id="button4" class="control_button"style="width:98.5px;">Compare Algorithms</button>
+      <button id="button5" onclick="displayInstructions()"style="width:98.5px;"class="control_button">Show Instructions</button>
 
     </div>
 
