@@ -97,7 +97,7 @@ function recursion(path,cost,threshold,grid,cellDetails,endPoints,allowDiagonal,
         if(visualize_recursion)
           grid.getNodeAt(successors[i].x,successors[i].y).opened=true;       
          var newCost= getCost(currentNode.x,currentNode.y,successors[i].x,successors[i].y);
-         var temp = recursion(path,currentNode.g+newCost,threshold,grid,cellDetails,endPoints,allowDiagonal);
+         var temp = recursion(path,currentNode.g+newCost,threshold,grid,cellDetails,endPoints,allowDiagonal,visualize_recursion);
         if(temp==0)
           return 0;
         if(temp<minThreshold)
