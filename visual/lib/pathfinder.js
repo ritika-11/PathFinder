@@ -681,7 +681,7 @@ var endPoints = {
 
   if(this.compare==true)
   {
-      return this.operations;
+      return {ops:this.operations,path:path};;
   }
    else
    {
@@ -960,7 +960,8 @@ BestFirstFinder.prototype.findPath = function(startX, startY, endX, endY, grid, 
             // if all endNodes have been traced, return the path
             if(endNodes.length === 0) {
                 if(compare) {
-                    return operations;
+                    var returnPath = Util.backtrace(temporaryDestination); 
+                     return {ops:operations,path:returnPath};
                 }
                 return Util.backtrace(temporaryDestination); 
             }
@@ -1004,7 +1005,7 @@ BestFirstFinder.prototype.findPath = function(startX, startY, endX, endY, grid, 
     } // end while not open list empty
 
     if(this.compare) {
-        return operations;
+        return {ops:operations,path:[]};
     }
 
     // fail to find the path
@@ -1080,7 +1081,8 @@ BreadthFirstFinder.prototype.findPath = function(startX, startY, endX, endY, gri
             // if all endNodes have been traced, return the path
             if(endNodes.length === 0) {
                 if(compare) {
-                    return operations;
+                    var returnPath = Util.backtrace(node); 
+                    return {ops:operations,path:returnPath};
                 }
                 return Util.backtrace(node); 
             }
@@ -1114,7 +1116,7 @@ BreadthFirstFinder.prototype.findPath = function(startX, startY, endX, endY, gri
     }
 
     if(this.compare) {
-        return operations;
+        return {ops:operations,path:[]};
     }
     // fail to find the path
     return [];
@@ -1193,7 +1195,8 @@ DijkstraFinder.prototype.findPath = function(startX, startY, endX, endY, grid, e
             // if all endNodes have been traced, return the path
             if(endNodes.length === 0) {
                 if(compare) {
-                    return operations;
+                   var returnPath = Util.backtrace(node); 
+                   return {ops:operations,path:returnPath};
                 }
                 return Util.backtrace(node); 
             }
@@ -1236,7 +1239,7 @@ DijkstraFinder.prototype.findPath = function(startX, startY, endX, endY, grid, e
     } // end while not open list empty
 
     if(this.compare) {
-        return operations;
+         return {ops:operations,path:[]};
     }
     // fail to find the path
     return [];
@@ -1524,7 +1527,8 @@ bh.insert(0,[{x:srcX,y:srcY}]);
  	var currentValue = val.value;
 
  	var currentNode = currentValue[currentValue.length-1]; 
- 	
+ 	grid.getNodeAt(currentNode.x,currentNode.y).closed=true; 
+
  	grid.getNodeAt(currentNode.x,currentNode.y).countu = grid.getNodeAt(currentNode.x,currentNode.y).countu+1;
  	if(currentNode.x==destX&&currentNode.y==destY)
  	{
@@ -1541,6 +1545,7 @@ bh.insert(0,[{x:srcX,y:srcY}]);
        	var first = [];
        	Array.prototype.push.apply(first, currentValue);
        	first.push({x:neighbours[i][0],y:neighbours[i][1]});
+        grid.getNodeAt(neighbours[i][0],neighbours[i][1]).opened=true;  
        	bh.insert(newCost,first);
        }
  	}
@@ -1768,7 +1773,7 @@ var endPoints = {
 
   if(this.compare==true)
   {
-      return this.operations;
+      return {ops:this.operations,path:path};
   }
    else
    {

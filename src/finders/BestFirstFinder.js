@@ -79,7 +79,8 @@ BestFirstFinder.prototype.findPath = function(startX, startY, endX, endY, grid, 
             // if all endNodes have been traced, return the path
             if(endNodes.length === 0) {
                 if(compare) {
-                    return operations;
+                    var returnPath = Util.backtrace(temporaryDestination); 
+                     return {ops:operations,path:returnPath};
                 }
                 return Util.backtrace(temporaryDestination); 
             }
@@ -123,7 +124,7 @@ BestFirstFinder.prototype.findPath = function(startX, startY, endX, endY, grid, 
     } // end while not open list empty
 
     if(this.compare) {
-        return operations;
+        return {ops:operations,path:[]};
     }
 
     // fail to find the path

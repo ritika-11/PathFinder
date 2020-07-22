@@ -68,7 +68,8 @@ DijkstraFinder.prototype.findPath = function(startX, startY, endX, endY, grid, e
             // if all endNodes have been traced, return the path
             if(endNodes.length === 0) {
                 if(compare) {
-                    return operations;
+                   var returnPath = Util.backtrace(node); 
+                   return {ops:operations,path:returnPath};
                 }
                 return Util.backtrace(node); 
             }
@@ -111,7 +112,7 @@ DijkstraFinder.prototype.findPath = function(startX, startY, endX, endY, grid, e
     } // end while not open list empty
 
     if(this.compare) {
-        return operations;
+         return {ops:operations,path:[]};
     }
     // fail to find the path
     return [];

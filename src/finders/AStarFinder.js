@@ -102,7 +102,7 @@ var endPoints = {
 
   if(this.compare==true)
   {
-      return this.operations;
+      return {ops:this.operations,path:path};;
   }
    else
    {

@@ -92,6 +92,11 @@ var Controller = StateMachine.create({
             from: ['ready', 'finished','modified','paused'],
             to:   'ready'
         },
+        {
+            name: 'dummy',
+            from: ['ready', 'finished','modified','paused'],
+            to:   'ready'
+        },
     ],
 });
 
@@ -230,24 +235,26 @@ $.extend(Controller, {
         var gridCopyBestFirst = this.grid.clone();
         var gridCopyBreadthFirst = this.grid.clone();
         var gridCopyDijkstra = this.grid.clone();
+        var gridCopyThetaStar = this.grid.clone();
 
         var finderAStar = new Pf.AStarFinder({comparison:true});
         var finderBestFirst = new Pf.BestFirstFinder({comparison:true});
         var finderBreadthFirst = new Pf.BreadthFirstFinder({comparison:true});
         var finderDijkstra = new Pf.DijkstraFinder({comparison:true});
+        var finderThetaStar = new Pf.ThetaStarFinder({comparison:true});
 
         var operationsAStar = finderAStar.findPath(this.startX,this.startY,this.end[0].x,this.end[0].y,gridCopyAStar);
         var operationsBestFirst = finderBestFirst.findPath(this.startX,this.startY,this.endX,this.endY,gridCopyBestFirst,this.end);
         var operationsBreadthFirst = finderBreadthFirst.findPath(this.startX,this.startY,this.endX,this.endY,gridCopyBreadthFirst,this.end);
         var operationsDijkstra = finderDijkstra.findPath(this.startX,this.startY,this.endX,this.endY,gridCopyDijkstra,this.end);
-        
+        var operationsThetaStar = finderThetaStar.findPath(this.startX,this.startY,this.end[0].x,this.end[0].y,gridCopyThetaStar);
+
         Controller.clearOperations();
         Controller.clearFootprints();
 
-    this.displayGraph(operationsAStar,operationsBestFirst,operationsBreadthFirst,operationsDijkstra);
+    this.displayGraph(operationsAStar,operationsBestFirst,operationsBreadthFirst,operationsDijkstra,operationsThetaStar);
 
     },
-
 
     /**
      * The following functions are called on entering states.
@@ -604,11 +611,12 @@ $.extend(Controller, {
     isStartOrEndPos: function(gridX, gridY) {
         return this.isStartPos(gridX, gridY) || this.isEndPos(gridX, gridY);
     },
-    displayGraph: function(a,b,c,d)
+    displayGraph: function(a,b,c,d,e)
     {
-           var chart = new CanvasJS.Chart("chartContainer", {
+        var chart1 = new CanvasJS.Chart("chartContainer1", {
         animationEnabled: true,
          theme: "light2",
+         width:700,
           title:{
         text: "Algorithm Comparison"
           },
@@ -617,20 +625,56 @@ $.extend(Controller, {
         title:'No of Operations'
           },
           axisX:{
-        title:'Algorithm used'
+        title:'Algorithm'
           },
         data: [{        
         type: "column",
         indexLabelFontSize: 16,
         dataPoints: [
-            { y: a, label:'AStarFinder'},
-            { y: b, label:'Best First Search'},
-            { y: c, label:'Breadth First Search' },
-            { y: d, label:'Dijkstra' },
+            { y: a.ops, label:'AStarFinder'},
+            { y: b.ops, label:'Best First Search'},
+            { y: c.ops, label:'Breadth First Search' },
+            { y: d.ops, label:'Dijkstra' },
+            { y: e.ops, label:'Theta*' },
         ]
        }]
       });
-      chart.render();
+
+        var lengthAStar = Pf.Util.pathLength(a.path);
+        var lengthBestFirstSearch = Pf.Util.pathLength(b.path);
+        var lengthBreadthSearch = Pf.Util.pathLength(c.path);
+        var lengthDijkstra = Pf.Util.pathLength(d.path);
+        var lengthThetaStar = Pf.Util.pathLength(e.path);
+
+        var chart2 = new CanvasJS.Chart("chartContainer2", {
+        animationEnabled: true,
+         theme: "light2",
+         width:700,
+          title:{
+        text: "Algorithm Comparison"
+          },
+         axisY:{
+        includeZero: true,
+        title:'PathLength'
+          },
+          axisX:{
+        title:'Algorithm'
+          },
+        data: [{        
+        type: "column",
+        indexLabelFontSize: 16,
+        dataPoints: [
+            { y: lengthAStar, label:'AStarFinder'},
+            { y: lengthBestFirstSearch, label:'Best First Search'},
+            { y: lengthBreadthSearch, label:'Breadth First Search' },
+            { y: lengthDijkstra, label:'Dijkstra' },
+            { y: lengthThetaStar, label:'Theta*' },
+        ]
+       }]
+      });
+
+      chart1.render();
+      chart2.render();
       document.getElementById('graph').style.display='block';
     }
 

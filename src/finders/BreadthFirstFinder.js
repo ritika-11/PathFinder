@@ -64,7 +64,8 @@ BreadthFirstFinder.prototype.findPath = function(startX, startY, endX, endY, gri
             // if all endNodes have been traced, return the path
             if(endNodes.length === 0) {
                 if(compare) {
-                    return operations;
+                    var returnPath = Util.backtrace(node); 
+                    return {ops:operations,path:returnPath};
                 }
                 return Util.backtrace(node); 
             }
@@ -98,7 +99,7 @@ BreadthFirstFinder.prototype.findPath = function(startX, startY, endX, endY, gri
     }
 
     if(this.compare) {
-        return operations;
+        return {ops:operations,path:[]};
     }
     // fail to find the path
     return [];

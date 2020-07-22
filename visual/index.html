@@ -90,6 +90,15 @@
         border-radius: 50%;
       }
       
+      #left {
+      float: left;
+      overflow: hidden;
+      margin-left: 100px;
+      }
+
+       #right {
+       overflow: hidden;
+      }
       </style>
       <!-- <style>
         body, html {
@@ -116,11 +125,16 @@
     <div class=bg id="draw_area" ></div>
 
     <div id="graph" class="w3-modal">
-      <div style="width: 500px; height:500px"class="w3-modal-content">
+      <div id='left' style="width: 720px; height:500px; padding-left: 20px;padding-right:20px"class="w3-modal-content">
           <button onclick="document.getElementById('graph').style.display='none'"style="height:50px;width:50px">X</button>
-        <div id="chartContainer" ></div>
+        <div id="chartContainer1" ></div>
+      </div>
+       <div id='right' style="width: 720px; height:500px; padding-left: 20px;padding-right:20px;"class="w3-modal-content">
+          <button onclick="document.getElementById('graph').style.display='none'"style="height:50px;width:50px">X</button>
+        <div id="chartContainer2" ></div>
       </div>
     </div>
+
 
     <div id="instructions_panel" class="panel">
       <header>
@@ -131,7 +145,8 @@
       Drag the <span class="green">green</span> node to set the start position. <br>
       Toggle the switch <span class="red">red</span> to set the end positions. <br>
       Choose an algorithm from the right-hand panel. <br>
-      Click Start Search in the lower-right corner to start the animation.
+      Click Start Search in the lower-right corner to start the animation.<br>
+      Give a set of obstacles and press compare button to compare algorithms on the basis of number of operations required in each operation.<br>
     </div>
 
     <div id="algorithm_panel" class="panel right_panel">
@@ -365,6 +380,15 @@
     <footer>
       Project Hosted on <a href="https://github.com/ritika-11/PathFinder">Github</a>
     </footer>
-
+<script>
+  function onclick1()
+  {
+    document.getElementById('left').style.display='none';
+    if(document.getElementById('right').style.display=='none')
+    {
+      document.getElementById('graph').style.display='none'
+    }
+  }
+</script> 
   </body>
 </html>
