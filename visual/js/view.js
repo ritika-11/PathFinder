@@ -8,8 +8,6 @@ var View = {
         normal: {
             fill: 'white',
             'stroke-opacity': 0.2, // the border
-            
-            //#B22222
         },
         blocked: {
             fill: 'grey',
@@ -178,7 +176,6 @@ var View = {
         else {
             node = endNodes[gridY][gridX] = this.rects[gridY][gridX].clone();
             node.animate(this.nodeStyle.end, 50);
-            //this.colorizeNode(node, this.nodeStyle.end.fill);
             this.zoomNode(node);
         }
     },
@@ -202,7 +199,6 @@ var View = {
             break;
         case 'tested':
             color = (value === true) ? nodeStyle.tested.fill : nodeStyle.normal.fill;
-
             this.colorizeNode(this.rects[gridY][gridX], color);
             this.setCoordDirty(gridX, gridY, true);
             break;
@@ -288,28 +284,22 @@ var View = {
         this.finderType=finderType;
         this.paths = new Array();
         this.path;
-        if(this.finderType=='KShortestPathFinder')
-        {
-            console.log(path.length);
-           for(var i=0;i<path.length;i++)
-           {
-            console.log('ghh');
-            var svgPath = this.buildSvgPath(path[i]);
-            console.log(i);
-            var style;
-            if(i==0)
-                style = this.pathStyle1;
-            else if(i==1)
-                style=this.pathStyle2;
-            else if(i==2)
-                style=this.pathStyle3;
-                      
-            var temp = this.paper.path(svgPath).attr(style);
-            this.paths.push(temp);      
-           }
+        if(this.finderType == 'KShortestPathFinder') {
+            for(var i=0;i<path.length;i++) {
+                var svgPath = this.buildSvgPath(path[i]);
+                var style;
+                if(i==0)
+                    style = this.pathStyle1;
+                else if(i==1)
+                    style=this.pathStyle2;
+                else if(i==2)
+                    style=this.pathStyle3;
+                        
+                var temp = this.paper.path(svgPath).attr(style);
+                this.paths.push(temp);      
+            }
         }
-        else
-        {
+        else {
             var svgPath = this.buildSvgPath(path);
             this.path = this.paper.path(svgPath).attr(this.pathStyle1);
         }      
@@ -332,12 +322,10 @@ var View = {
     },
     clearPath: function() {
         if (this.path) {
-            console.log('oh mama');
             this.path.remove();
         }
         if(this.paths)
         {
-            console.log('go here');
             for(var i=0;i<this.paths.length;i++)
            {
               this.paths[i].remove();   

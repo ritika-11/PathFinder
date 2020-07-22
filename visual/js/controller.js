@@ -434,7 +434,6 @@ $.extend(Controller, {
             if (!Controller.is('searching')) {
                 return;
             }
-            console.log("in loop");
             Controller.step();
             setTimeout(loop, interval);
         })();
@@ -449,7 +448,6 @@ $.extend(Controller, {
                 return;
             }
             op = operations.shift();
-            console.log("in step");
             isSupported = View.supportedOperations.indexOf(op.attr) !== -1;
         } while (!isSupported);
 
@@ -563,11 +561,10 @@ $.extend(Controller, {
         var width, height,
             marginRight, availWidth,
             centerX, centerY,
-            endX, endY,
             nodeSize = View.nodeSize;
 
-        width  = $(window).width();
-        height = $(window).height();
+        width  = this.gridSize[0] * nodeSize;
+        height = this.gridSize[1] * nodeSize;
 
         marginRight = $('#algorithm_panel').width();
         availWidth = width - marginRight;
@@ -575,13 +572,12 @@ $.extend(Controller, {
         centerX = Math.ceil(availWidth / 2 / nodeSize);
         centerY = Math.floor(height / 2 / nodeSize);
 
-        this.setStartPos(centerX - 5, centerY);
-        this.setEndPos(centerX + 5, centerY);
-        //View.setEndPos1(centerX + 10, centerY);
+        this.setStartPos(centerX - 5, centerY - 3);
+        this.setEndPos(centerX + 5, centerY - 3);
         if(!this.end) {
             this.end = [];
         }
-        this.end.push({x:centerX + 5, y:centerY});
+        this.end.push({x:centerX + 5, y:centerY - 3});
     },
     setStartPos: function(gridX, gridY) {
         this.startX = gridX;

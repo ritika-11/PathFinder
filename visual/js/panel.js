@@ -20,11 +20,15 @@ var Panel = {
         });
         $('#button2').attr('disabled', 'disabled');
     },
-    
+
     getToggleValue: function() {
-        var toggleValue = typeof $('.togbtn:checked').val() !== 'undefined';
-        console.log(toggleValue);
-        return toggleValue;
+        var toggleValue = $('input[name=wall_destination]:checked').val();
+        if(toggleValue === 'destination') {
+            return true;
+        }
+        else {
+            return false;
+        }
     },
     /**
      * Get the user selected path-finder.
@@ -42,14 +46,10 @@ var Panel = {
 
         case 'astar_header':
             this.toggleDisabled = true;
-            console.log(this.toggleDisabled);
             allowDiagonal = typeof $('#astar_section ' +
                                      '.allow_diagonal:checked').val() !== 'undefined';
-                                     console.log(allowDiagonal);
 
             heuristic = $('input[name=astar_heuristic]:checked').val();
-            console.log('heuristic is');
-            console.log(heuristic);
             finder = new Pf.AStarFinder({
                 allowDiagonal: allowDiagonal,
                 heuristic: Pf.Heuristic[heuristic],
