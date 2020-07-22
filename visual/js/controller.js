@@ -440,6 +440,7 @@ $.extend(Controller, {
             if (!Controller.is('searching')) {
                 return;
             }
+            console.log("in loop");
             Controller.step();
             setTimeout(loop, interval);
         })();
@@ -454,6 +455,7 @@ $.extend(Controller, {
                 return;
             }
             op = operations.shift();
+            console.log("in step");
             isSupported = View.supportedOperations.indexOf(op.attr) !== -1;
         } while (!isSupported);
 

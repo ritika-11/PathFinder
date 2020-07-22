@@ -193,13 +193,11 @@ var View = {
             this.setWalkableAt(gridX, gridY, value);
             break;
         case 'opened':
-            this.rects[gridY][gridX].animate(this.nodeStyle.opened, 100);
-            //this.colorizeNode(this.rects[gridY][gridX], nodeStyle.opened.fill);
+            this.colorizeNode(this.rects[gridY][gridX], nodeStyle.opened.fill);
             this.setCoordDirty(gridX, gridY, true);
             break;
         case 'closed':
-            this.rects[gridY][gridX].animate(this.nodeStyle.closed, 100);
-            //this.colorizeNode(this.rects[gridY][gridX], nodeStyle.closed.fill);
+            this.colorizeNode(this.rects[gridY][gridX], nodeStyle.closed.fill);
             this.setCoordDirty(gridX, gridY, true);
             break;
         case 'tested':
