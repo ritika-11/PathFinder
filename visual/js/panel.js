@@ -233,6 +233,7 @@ var Panel = {
                                      '.allow_diagonal:checked').val() !== 'undefined';
            visualize_recursion = typeof $('#k_paths_section ' +
                                      '.visualize_recursion:checked').val() !== 'undefined';
+
            var paths = $('input[name=NumberOfPaths]:checked').val();
 
              console.log(allowDiagonal);
