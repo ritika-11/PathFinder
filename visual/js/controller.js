@@ -563,8 +563,8 @@ $.extend(Controller, {
             centerX, centerY,
             nodeSize = View.nodeSize;
 
-        width  = this.gridSize[0] * nodeSize;
-        height = this.gridSize[1] * nodeSize;
+        width = Math.min($(window).width(), this.gridSize[0]*nodeSize);
+        height = Math.min($(window).height(), this.gridSize[1]*nodeSize);
 
         marginRight = $('#algorithm_panel').width();
         availWidth = width - marginRight;
