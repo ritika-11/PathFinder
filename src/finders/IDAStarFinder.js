@@ -22,10 +22,9 @@ function IDAStarFinder(opt) {
  * The path, including start and  all end positions.
  */
 IDAStarFinder.prototype.findPath = function(srcX,srcY,destX,destY,grid) {
-    console.log(this.heuristic);
 
-    if(srcX==destX&&srcY==destY)
-    return "already present at destination";
+if(srcX==destX&&srcY==destY)
+  return "already present at destination";
 var rows = grid.nodes.length;
 var columns = grid.nodes[0].length;
 var path = new Array();
@@ -58,7 +57,6 @@ var endPoints = {
             // check if destination is found
             if (newThreshold == 0)
             {
-               console.log('destination found');
                return path;
             }
             // set new threshold

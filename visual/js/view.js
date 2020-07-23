@@ -6,31 +6,31 @@ var View = {
     nodeSize: 30, // width and height of a single node, in pixel
     nodeStyle: {
         normal: {
-            fill: 'white',
+            fill: '#fffdd0',
             'stroke-opacity': 0.2, // the border
         },
         blocked: {
-            fill: 'grey',
+            fill: '#8c3615',
             'stroke-opacity': 0.2,
             opacity:1,
         },
         start: {
-            fill: '#0d0',
+            fill: '#70e838',
             'stroke-opacity': 0.2,
             opacity:1,
         },
         end: {
-            fill: 'red',
+            fill: '#629ffc',
             'stroke-opacity': 0.2,
             opacity: 1,
         },
         opened: {
-            fill: '#00FA9A',
+            fill: '#ff9051',
             'stroke-opacity': 0.2,
             opacity:1,
         },
         closed: {
-            fill: '#afeeee',
+            fill: '#f2c792',
             'stroke-opacity': 0.2,
             opacity:1,
         },
@@ -301,7 +301,7 @@ var View = {
         }
         else {
             var svgPath = this.buildSvgPath(path);
-            this.path = this.paper.path(svgPath).attr(this.pathStyle1);
+            this.path = this.paper.path(svgPath).attr(this.pathStyle3);
         }      
 
     },
