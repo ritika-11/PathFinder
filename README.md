@@ -1,23 +1,20 @@
 # PathFinder
 
-Foobar is a Python library for dealing with word pluralization.
+PathFinder is a web application implementing various shortest pathfinding algorithms in a 2D grid environment.
 
-```python
 The algorithms included till now are
-A* search
-IDA* search
-Theta* search
-Best First Search
-Breadth-First Search
-Dijkstra algorithm
-K Shortest Paths using Dijkstra algorithm
-```
+1)A* search
+2)IDA* search
+3)Theta* search
+4)Best First Search
+5)Breadth-First Search
+6)Dijkstra's algorithm
+7)K Shortest Paths using Dijkstra's algorithm
 
 ## Usage
 
-```bash
-An online demo can be seen at [here](https://ritika-11.github.io/mars.rover/).
-```
+  An online demo can be seen [here](https://ritika-11.github.io/mars.rover/).
+
   You can select an algorithm from the panel on the right side. There are also options available if you want to allow diagonal paths or not, or which heuristic function you want to use to calculate distance.
 
   Algorithms A*, IDA*, Theta*, and K Shortest Paths run only for one destination. Best First Search, Breadth-First Search, and Dijkstra’s algorithm can be used for multiple destinations. 
