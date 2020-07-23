@@ -1,6 +1,6 @@
 # PathFinder
 
-<h3>PathFinder is a web application implementing various shortest pathfinding algorithms in a 2D grid environment.</h3>
+<h3>A web application implementing various shortest pathfinding algorithms in a 2D grid environment.</h3>
 
 The algorithms included till now are:<br/>
 1)A* search<br/>
