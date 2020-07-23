@@ -3,13 +3,13 @@
 PathFinder is a web application implementing various shortest pathfinding algorithms in a 2D grid environment.
 
 The algorithms included till now are
-1)A* search
-2)IDA* search
-3)Theta* search
-4)Best First Search
-5)Breadth-First Search
-6)Dijkstra's algorithm
-7)K Shortest Paths using Dijkstra's algorithm
+1)A* search<br/>
+2)IDA* search<br/>
+3)Theta* search<br/>
+4)Best First Search<br/>
+5)Breadth-First Search<br/>
+6)Dijkstra's algorithm<br/>
+7)K Shortest Paths using Dijkstra's algorithm<br/>
 
 ## Usage
 
