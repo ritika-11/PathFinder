@@ -37,6 +37,16 @@ h1, h2, h3, h4, h5, h6 {
     right: 20px;
 }
 
+#left {
+    float: left;
+    margin-left: 7%;
+}
+
+#right {
+    float: right;
+    margin-right: 7%;
+}
+
 #algorithm_panel {
     right: 20px;
     top: 20px;

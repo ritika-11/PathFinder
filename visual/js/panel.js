@@ -83,7 +83,6 @@ var Panel = {
             this.toggleDisabled = false;
             allowDiagonal = typeof $('#dijkstra_section ' +
                                      '.allow_diagonal:checked').val() !== 'undefined';
-                                     console.log(allowDiagonal);
             finder = new Pf.DijkstraFinder({
                 allowDiagonal: allowDiagonal,
                 multiplePaths:false,
@@ -92,11 +91,8 @@ var Panel = {
 
         case 'thetastar_header':
             this.toggleDisabled = true;
-            console.log(this.toggleDisabled);
             allowDiagonal = typeof $('#thetastar_section ' +
                                      '.allow_diagonal:checked').val() !== 'undefined';
-                                     console.log(allowDiagonal);
-
             heuristic = $('input[name=thetastar_heuristic]:checked').val();
             finder = new Pf.ThetaStarFinder({
                 allowDiagonal: allowDiagonal,

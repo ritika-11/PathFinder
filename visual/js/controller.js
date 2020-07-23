@@ -602,7 +602,6 @@ $.extend(Controller, {
     isEnd: function(gridX, gridY) {
         for(var q=0;q<this.end.length;q++) {
             if((this.end[q].x === gridX) && (this.end[q].y === gridY)) {
-                console.log('ritika');
                 return q;
             }
         }
