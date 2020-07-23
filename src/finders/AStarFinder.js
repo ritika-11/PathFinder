@@ -1,6 +1,15 @@
 var BinaryHeap = require('@tyriar/binary-heap');
 var Heuristic  = require('../core/Heuristic');
 
+/**
+ * @constructor
+ * @param {Object} opt
+ * @param {boolean} opt.allowDiagonal Whether diagonal movement is allowed.
+ * @param {function} opt.heuristic Heuristic function to estimate the distance
+ *     (defaults to manhattan).
+ * @param {boolean} opt.comparison Whether the algo needs to be run for comparison
+ */
+
 function AStarFinder(opt) {
    opt = opt || {};
    this.allowDiagonal = opt.allowDiagonal||true;
@@ -9,6 +18,10 @@ function AStarFinder(opt) {
    this.operations=0;
 }
 
+/**
+ * Find and return the the path.
+ * The path, including start and  all end positions.
+ */
 AStarFinder.prototype.findPath = function(srcX,srcY,destX,destY,grid) {
 var unexploredCellsSet;
 var rows = grid.nodes.length;
@@ -22,9 +35,11 @@ var endPoints = {
    destY:destY,
 };
 
-//if the source is already present 
+//if the source is already present at destination
   if(srcX==destX&&srcY==destY)
     return "already present at destination";
+
+
   var exploredCells = [];
   for(var i=0;i<rows;i++)
   {
@@ -36,6 +51,7 @@ var endPoints = {
     exploredCells.push(tempArray);
   }
 
+ //cellDetails array initialized with details of each node
   var cellDetails =[];
   for(var i=0;i<rows;i++)
   {
@@ -54,12 +70,14 @@ var endPoints = {
        cellDetails.push(tempArray);
   } 
 
+   //updated information about start node in cellDetails
     cellDetails[srcY][srcX].f = 0.0; 
     cellDetails[srcY][srcX].g = 0.0; 
     cellDetails[srcY][srcX].h = 0.0; 
     cellDetails[srcY][srcX].parentX = srcX; 
     cellDetails[srcY][srcX].parentY = srcY; 
 
+    //a new empty binary heap to store opened nodes
     unexploredCellsSet = new BinaryHeap();
 
     unexploredCellsSet.insert(0,{x:srcX,y:srcY});
@@ -70,14 +88,17 @@ var endPoints = {
     value:false
    };
    
-
+   //run the loop until all nodes in the binaryHeap are removed
    while(!unexploredCellsSet.isEmpty())
    {
+      //extract rhe node with minimum f value from heap
       var val = unexploredCellsSet.extractMinimum();
       
       exploredCells[val.value.y][val.value.x]=true;
       var x = val.value.x;
       var y = val.value.y;
+
+      //get neighbors of the node which is currently being explored
       var neighbours = this.getNeighbours(x,y,grid,this.allowDiagonal);
      
       for(var i=0;i<neighbours.length;i++)
@@ -96,6 +117,7 @@ var endPoints = {
      grid.getNodeAt(val.value.x,val.value.y).closed=true;  
    }
 
+ //if the algorithm is being run for comparison purpose, return number of operations and path
   if(this.compare==true)
   {
       return {ops:this.operations,path:path};;
@@ -106,6 +128,7 @@ var endPoints = {
    }  
 };
 
+//get cost of moving from current node to its chosen successor
 AStarFinder.prototype.getCost = function(x,y,x1,y1)
 {
    if(x==x1||y==y1)
@@ -118,6 +141,7 @@ AStarFinder.prototype.getCost = function(x,y,x1,y1)
    }
 } 
 
+//check if given coordinates lie inside grid
 AStarFinder.prototype.isValidCell = function (x,y,grid)
 {
    if(x>=0&&x<grid.nodes[0].length&&y>=0&&y<grid.nodes.length)
@@ -126,6 +150,7 @@ AStarFinder.prototype.isValidCell = function (x,y,grid)
     return false;
 }
 
+//check if we have reached destination
 AStarFinder.prototype.isDestination = function isDestination (x,y,endPoints)
 {
   if(x==endPoints.destX&&y==endPoints.destY)
@@ -134,6 +159,7 @@ AStarFinder.prototype.isDestination = function isDestination (x,y,endPoints)
     return false;
 }
 
+//backtrace to find the path
  AStarFinder.prototype.printPath = function (cellDetails,endPoints,path)
 {
   var row = endPoints.destX;
@@ -151,11 +177,13 @@ AStarFinder.prototype.isDestination = function isDestination (x,y,endPoints)
      path.push([endPoints.srcX,endPoints.srcY]); 
 }
 
+//euclidean heuristic to find path between two points
 AStarFinder.prototype.euclidean =function  (x,y,endPoints)
 {
   return Math.pow((x-endPoints.destX)*(x-endPoints.destX)+(y-endPoints.destY)*(y-endPoints.destY),0.5);
 }
 
+//manhattan heuristic to find path between two points
 AStarFinder.prototype.manhattan = function  (x,y,endPoints)
 {
   var a = Math.abs(x-endPoints.destX);
@@ -163,16 +191,8 @@ AStarFinder.prototype.manhattan = function  (x,y,endPoints)
   return a+b;
 }
 
-AStarFinder.prototype.diagonal = function (x,y,endPoints)
-{
-  var a = Math.abs(x-endPoints.destX);
-  var b = Math.abs(y-endPoints.destY);
-  if(a>=b)
-    return a;
-  else
-    return b;
-}
 
+//check if a node is traversable
  AStarFinder.prototype.isUnblocked = function(grid,x,y)
 {
    if(grid.nodes[y][x].walkable==1)
@@ -180,6 +200,8 @@ AStarFinder.prototype.diagonal = function (x,y,endPoints)
    else
     return false;
 }
+
+// to get all the adjacent nodes of a node
 
 AStarFinder.prototype.getNeighbours = function(x,y,grid,allowDiagonal)
 {
@@ -242,8 +264,11 @@ return neighbours;
 
 }
 
+// to check the neighbour node and try to minimize length by skipping the parent node if line of sight is available
 AStarFinder.prototype.checkneighbour = function (x,y,cellDetails,foundDest,exploredCells,grid,xOriginal,yOriginal,endPoints,unexploredCellsSet,path)
 {
+
+  //if the destination is found return
    if(foundDest.value==true)
    {
     return;

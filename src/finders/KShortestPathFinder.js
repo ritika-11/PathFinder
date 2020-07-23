@@ -7,6 +7,11 @@ function KShortestPathFinder(opt) {
    this.visualize_recursion =opt.visualize_recursion;
 }
 
+/**
+ * Find and return the the path.
+ * The path, including start and  all end positions.
+ */
+
 KShortestPathFinder.prototype.findPath = function(srcX,srcY,destX,destY,grid) {
 if(srcX==destX&&srcY==destY)
 	return "already present at destination";
@@ -29,6 +34,7 @@ var endPoints = {
 
 bh.insert(0,[{x:srcX,y:srcY}]);
 
+//continue loop until you have nodes left to explore and the number of paths found is leass than needed
  while(!bh.isEmpty()&&countDest<this.K)
  {
  	var val = bh.extractMinimum();
@@ -43,24 +49,28 @@ bh.insert(0,[{x:srcX,y:srcY}]);
  	grid.getNodeAt(currentNode.x,currentNode.y).countu = grid.getNodeAt(currentNode.x,currentNode.y).countu+1;
  	if(currentNode.x==destX&&currentNode.y==destY)
  	{
+    //if current path ends at destination add it into paths
  		paths.push(currentValue);
  	}
 
  	if(grid.getNodeAt(currentNode.x,currentNode.y).countu<=this.K)
- 	{
-      
+ 	{     
        var neighbours = this.getNeighbours(currentNode.x,currentNode.y,grid,this.allowDiagonal); 
        for(var i=0;i<neighbours.length;i++)
        {
        	 var newCost = currentCost+ this.getCost(currentNode.x,currentNode.y,neighbours[i][0],neighbours[i][1]);
+         //add this node to current path
        	var first = [];
        	Array.prototype.push.apply(first, currentValue);
        	first.push({x:neighbours[i][0],y:neighbours[i][1]});
         if(this.visualize_recursion)
-          grid.getNodeAt(neighbours[i][0],neighbours[i][1]).opened=true;        
+          grid.getNodeAt(neighbours[i][0],neighbours[i][1]).opened=true;
+
+        //insert path into binary heap          
        	bh.insert(newCost,first);
        }
  	}
+  //update number of paths found to final node
  	countDest = grid.getNodeAt(destX,destY).countu;
  }
 
@@ -68,6 +78,8 @@ bh.insert(0,[{x:srcX,y:srcY}]);
  {
     return [];
  }
+
+ //convert path into proper format needed
  var returnValue=new Array();
  for(var i=0;i<this.K;i++)
  {
@@ -84,6 +96,7 @@ bh.insert(0,[{x:srcX,y:srcY}]);
 
 }	
 
+//check if given coordinates lie within the grid
 KShortestPathFinder.prototype.isValidCell = function (x,y,grid)
 {
    if(x>=0&&x<grid.nodes[0].length&&y>=0&&y<grid.nodes.length)
@@ -92,6 +105,7 @@ KShortestPathFinder.prototype.isValidCell = function (x,y,grid)
     return false;
 }
 
+//check if a given node is walkable
 KShortestPathFinder.prototype.isUnblocked = function(grid,x,y)
 {
    if(grid.nodes[y][x].walkable==1)
@@ -100,6 +114,7 @@ KShortestPathFinder.prototype.isUnblocked = function(grid,x,y)
     return false;
 }
 
+//get cost of moving from current node to its chosen successor
 KShortestPathFinder.prototype.getCost = function(x,y,x1,y1)
 {
    if(x==x1||y==y1)
@@ -111,7 +126,7 @@ KShortestPathFinder.prototype.getCost = function(x,y,x1,y1)
      return 1.414;
    }
 } 
-
+//get all neighboring nodes of node which is being explored right now
 KShortestPathFinder.prototype.getNeighbours = function(x,y,grid,allowDiagonal)
 {
        var neighbours = new Array();
