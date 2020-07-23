@@ -9,13 +9,12 @@ module.exports = {
     'BestFirstFinder'           : require('./finders/BestFirstFinder'),
     'BreadthFirstFinder'        : require('./finders/BreadthFirstFinder'),
     'DijkstraFinder'            : require('./finders/DijkstraFinder'),
-    //'IDAStarFinder'             : require('./finders/IDAStarFinder'),
-    'IDAStarFinder'             : require('./finders/dummy'),
+    'IDAStarFinder'             : require('./finders/IDAStarFinder'),
     'ThetaStarFinder'           : require('./finders/ThetaStarFinder'),
     'KShortestPathFinder'       : require('./finders/KShortestPathFinder'),
 };
 
-},{"./core/Grid":2,"./core/Heuristic":3,"./core/Node":4,"./core/Util":5,"./finders/AStarFinder":6,"./finders/BestFirstFinder":7,"./finders/BreadthFirstFinder":8,"./finders/DijkstraFinder":9,"./finders/KShortestPathFinder":10,"./finders/ThetaStarFinder":11,"./finders/dummy":12,"@tyriar/binary-heap":13}],2:[function(require,module,exports){
+},{"./core/Grid":2,"./core/Heuristic":3,"./core/Node":4,"./core/Util":5,"./finders/AStarFinder":6,"./finders/BestFirstFinder":7,"./finders/BreadthFirstFinder":8,"./finders/DijkstraFinder":9,"./finders/IDAStarFinder":10,"./finders/KShortestPathFinder":11,"./finders/ThetaStarFinder":12,"@tyriar/binary-heap":13}],2:[function(require,module,exports){
 var Node = require('./Node');
 
 /**
@@ -590,12 +589,10 @@ function AStarFinder(opt) {
 }
 
 AStarFinder.prototype.findPath = function(srcX,srcY,destX,destY,grid) {
-  console.log('went here to find path');
 var unexploredCellsSet;
 var rows = grid.nodes.length;
 var columns = grid.nodes[0].length;
 var path = new Array();
-console.log(rows);
 
 var endPoints = {
    srcX:srcX,
@@ -604,7 +601,7 @@ var endPoints = {
    destY:destY,
 };
 
-
+//if the source is already present 
   if(srcX==destX&&srcY==destY)
     return "already present at destination";
   var exploredCells = [];
@@ -635,7 +632,6 @@ var endPoints = {
        }
        cellDetails.push(tempArray);
   } 
-    console.log(cellDetails);
 
     cellDetails[srcY][srcX].f = 0.0; 
     cellDetails[srcY][srcX].g = 0.0; 
@@ -678,7 +674,6 @@ var endPoints = {
      this.operations++;
      grid.getNodeAt(val.value.x,val.value.y).closed=true;  
    }
-  console.log(path);
 
   if(this.compare==true)
   {
@@ -722,7 +717,6 @@ AStarFinder.prototype.isDestination = function isDestination (x,y,endPoints)
 {
   var row = endPoints.destX;
   var col = endPoints.destY;
-   //console.log(cellDetails[row][col].parentX,cellDetails[row][col].parentY);
    while (!(cellDetails[col][row].parentX == row 
              && cellDetails[col][row].parentY == col )) 
     { 
@@ -734,7 +728,6 @@ AStarFinder.prototype.isDestination = function isDestination (x,y,endPoints)
     } 
      path.push([row,col]); 
      path.push([endPoints.srcX,endPoints.srcY]); 
-     //console.log(endPoints.srcX,endPoints.srcY);
 }
 
 AStarFinder.prototype.euclidean =function  (x,y,endPoints)
@@ -890,6 +883,7 @@ var Heuristic  = require('../core/Heuristic');
  * @param {boolean} opt.allowDiagonal Whether diagonal movement is allowed.
  * @param {function} opt.heuristic Heuristic function to estimate the distance
  *     (defaults to manhattan).
+ * @param {boolean} opt.comparison Whether the algo needs to be run for comparison
  */
 function BestFirstFinder(opt) {
     opt = opt || {};
@@ -1023,6 +1017,7 @@ var Util = require('../core/Util');
  * @constructor
  * @param {Object} opt
  * @param {boolean} opt.allowDiagonal Whether diagonal movement is allowed.
+ * @param {boolean} opt.comparison Whether the algo needs to be run for comparison
  */
 function BreadthFirstFinder(opt) {
     opt = opt || {};
@@ -1133,6 +1128,7 @@ var Util = require('../core/Util');
  * @constructor
  * @param {Object} opt
  * @param {boolean} opt.allowDiagonal Whether diagonal movement is allowed.
+ * @param {boolean} opt.comparison Whether the algo needs to be run for comparison
  */
 function DijkstraFinder(opt) {
     opt = opt || {};
@@ -1249,6 +1245,234 @@ DijkstraFinder.prototype.findPath = function(startX, startY, endX, endY, grid, e
 module.exports = DijkstraFinder;
 
 },{"../core/Util":5,"@tyriar/binary-heap":13}],10:[function(require,module,exports){
+var Heuristic  = require('../core/Heuristic');
+
+function IDAStarFinder(opt) {
+   opt = opt || {};
+   this.allowDiagonal = opt.allowDiagonal;
+   this.heuristic = opt.heuristic;
+   this.timeLimit = opt.timeLimit || Number.MAX_VALUE;
+   this.visualize_recursion = opt.visualize_recursion&&true;
+}
+
+IDAStarFinder.prototype.findPath = function(srcX,srcY,destX,destY,grid) {
+    console.log(this.heuristic);
+
+    if(srcX==destX&&srcY==destY)
+    return "already present at destination";
+var rows = grid.nodes.length;
+var columns = grid.nodes[0].length;
+var path = new Array();
+
+var endPoints = {
+   srcX:srcX,
+   srcY:srcY,
+   destX:destX,
+   destY:destY,
+};
+
+  var startTime = new Date().getTime();
+  var threshold;
+
+     if(this.heuristic==Heuristic.manhattan)
+      {
+          threshold =manhattan(srcX,srcY,endPoints);
+      }else if(this.heuristic==Heuristic.euclidean)
+      {
+         threshold=euclidean(srcX,srcY,endPoints);
+      }
+
+  var path = new Array();
+  path.push([srcX,srcY]); 
+
+  var newThreshold;
+      do {      
+            // Start Search
+            newThreshold = recursion(path,0, threshold,grid,endPoints,this.allowDiagonal,this.visualize_recursion,startTime,this.timeLimit,this.heuristic);
+            // Check If Goal Node Was Found
+            if (newThreshold == 0)
+            {
+               console.log('destination found');
+               return path;
+            }
+            // Set New F Boundary
+            threshold = newThreshold;
+        } while(threshold!==Number.MAX_VALUE);
+
+        return [];
+
+};
+
+function recursion(path,cost,threshold,grid,endPoints,allowDiagonal,visualize_recursion,startTime,timeLimit,heuristic)
+{    
+  
+   if (timeLimit > 0 &&
+            new Date().getTime() - startTime > timeLimit * 1000) {
+            return Number.MAX_VALUE;
+     }
+
+   var currentNode = path[path.length-1];
+    var additionalCost;
+
+   if(heuristic==Heuristic.manhattan)
+      {
+          additionalCost =manhattan(currentNode[0], currentNode[1],endPoints);
+      }else if(heuristic==Heuristic.euclidean)
+      {
+         additionalCost=euclidean(currentNode[0], currentNode[1],endPoints);
+      }
+
+   var f = cost + additionalCost;
+   if(f > threshold)
+    return f;
+   
+   if(isDestination(currentNode[0],currentNode[1],endPoints))
+    return 0;
+
+    var minThreshold = Number.MAX_VALUE;
+    var successors =  getSuccessors(currentNode[0],currentNode[1],grid,allowDiagonal);
+
+    for(var i=0;i<successors.length;i++)
+    {
+      if(!path.includes(successors[i]))
+      {
+        path.push(successors[i]);
+        if(visualize_recursion)
+          grid.getNodeAt(successors[i][0],successors[i][1]).opened=true;       
+         var newCost= getCost(currentNode[0],currentNode[1],successors[i][0],successors[i][1]);
+         var temp = recursion(path,cost + newCost,threshold,grid,endPoints,allowDiagonal,visualize_recursion,startTime,timeLimit,heuristic);
+        if(temp==0)
+          return 0;
+        if(temp<minThreshold)
+          minThreshold= temp;
+        path.pop();
+        if(visualize_recursion)
+          grid.getNodeAt(successors[i][0],successors[i][1]).closed=true;
+        
+      }
+    }
+
+   return minThreshold;
+}
+
+function getCost(x,y,x1,y1)
+{
+  if(x==x1||y==y1)
+   {
+    return 1;
+   }
+   else
+   {
+     return Math.SQRT2;
+   }
+}
+
+function isValidCell (x,y,grid)
+{
+   if(x>=0&&x<grid.nodes[0].length&&y>=0&&y<grid.nodes.length)
+    return true;
+   else
+    return false;
+}
+
+
+function isDestination (x,y,endPoints)
+{
+  if(x==endPoints.destX&&y==endPoints.destY)
+    return true;
+  else
+    return false;
+}
+
+function euclidean (x,y,endPoints,heu)
+{
+  return Math.sqrt((x-endPoints.destX)*(x-endPoints.destX)+(y-endPoints.destY)*(y-endPoints.destY));
+}
+
+function manhattan (x,y,endPoints)
+{
+  var a = Math.abs(x-endPoints.destX);
+  var b = Math.abs(y-endPoints.destY);
+  return a+b;
+}
+
+function diagonal (x,y,endPoints)
+{
+  var a = Math.abs(x-endPoints.destX);
+  var b = Math.abs(y-endPoints.destY);
+  if(a>=b)
+    return a;
+  else
+    return b;
+}
+
+function isUnblocked (grid,x,y)
+{
+   if(grid.nodes[y][x].walkable==1)
+    return true;
+   else
+    return false;
+}
+
+function getSuccessors(x,y,grid,allowDiagonal)
+{
+   var successors = new Array();
+        s0 = false, d0 = false,
+        s1 = false, d1 = false,
+        s2 = false, d2 = false,
+        s3 = false, d3 = false;
+
+  if(isValidCell(x-1,y,grid)&&isUnblocked(grid,x-1,y))
+  {
+    successors.push([x-1,y]);
+    s0=true;
+  }
+  if(isValidCell(x+1,y,grid)&&isUnblocked(grid,x+1,y))
+  {
+    successors.push([x+1,y]);
+    s2=true;
+  }
+   if(isValidCell(x,y-1,grid)&&isUnblocked(grid,x,y-1))
+  {
+    successors.push([x,y-1]);
+     s1=true;
+  }
+  if(isValidCell(x,y+1,grid)&&isUnblocked(grid,x,y+1))
+  {
+    successors.push([x,y+1]);
+     s3=true; 
+  }
+ 
+       d0=s1||s2;
+       d1=s2||s3;
+       d2=s3||s0;
+       d3=s0||s1;
+
+  if(!allowDiagonal)
+  {
+    return successors;
+  }
+  if(d2&&isValidCell(x-1,y+1,grid)&&isUnblocked(grid,x-1,y+1))
+  {
+    successors.push([x-1,y+1]);
+  }
+  if(d3&&isValidCell(x-1,y-1,grid)&&isUnblocked(grid,x-1,y-1))
+  {
+    successors.push([x-1,y-1]);
+  } 
+  if(d0&&isValidCell(x+1,y-1,grid)&&isUnblocked(grid,x+1,y-1))
+  {
+    successors.push([x+1,y-1]);
+  }
+  if(d1&&isValidCell(x+1,y+1,grid)&&isUnblocked(grid,x+1,y+1))
+  {
+    successors.push([x+1,y+1]);  
+  }     
+   return successors;
+}
+
+module.exports = IDAStarFinder;
+},{"../core/Heuristic":3}],11:[function(require,module,exports){
 var BinaryHeap = require('@tyriar/binary-heap');
 
 function KShortestPathFinder(opt) {
@@ -1266,7 +1490,7 @@ if(srcX==destX&&srcY==destY)
 var rows = grid.nodes.length;
 var columns = grid.nodes[0].length;
 
-var paths = new Array();
+var paths = [];
 var bh = new BinaryHeap();
 var countDest = grid.getNodeAt(destX,destY).countu;
 
@@ -1315,6 +1539,10 @@ bh.insert(0,[{x:srcX,y:srcY}]);
  	countDest = grid.getNodeAt(destX,destY).countu;
  }
 
+ if(paths.length==0)
+ {
+    return [];
+ }
  var returnValue=new Array();
  for(var i=0;i<this.K;i++)
  {
@@ -1423,10 +1651,18 @@ return neighbours;
 
 module.exports = KShortestPathFinder;
 
-},{"@tyriar/binary-heap":13}],11:[function(require,module,exports){
+},{"@tyriar/binary-heap":13}],12:[function(require,module,exports){
 var BinaryHeap = require('@tyriar/binary-heap');
 var Heuristic  = require('../core/Heuristic');
 
+/**
+ * @constructor
+ * @param {Object} opt
+ * @param {boolean} opt.allowDiagonal Whether diagonal movement is allowed.
+ * @param {function} opt.heuristic Heuristic function to estimate the distance
+ *     (defaults to manhattan).
+ * @param {boolean} opt.comparison Whether the algo needs to be run for comparison
+ */
 function ThetaStarFinder(opt) {
    opt = opt || {};
    this.allowDiagonal = opt.allowDiagonal||true;
@@ -1435,54 +1671,54 @@ function ThetaStarFinder(opt) {
    this.operations=0;
 }
 
+/**
+ * Find and return the the path.
+ * @return {Array<Array<number>>} The path, including start and
+ *    all end positions.
+ */
 ThetaStarFinder.prototype.findPath = function(srcX,srcY,destX,destY,grid) {
-console.log('went here to find path');
-var unexploredCellsSet;
-var rows = grid.nodes.length;
-var columns = grid.nodes[0].length;
-var path = new Array();
-console.log(rows);
+    var unexploredCellsSet;
+    var rows = grid.nodes.length;
+    var columns = grid.nodes[0].length;
+    var path = new Array();
 
-var endPoints = {
-   srcX:srcX,
-   srcY:srcY,
-   destX:destX,
-   destY:destY,
-};
+    var endPoints = {
+    srcX:srcX,
+    srcY:srcY,
+    destX:destX,
+    destY:destY,
+    };
 
-
-  if(srcX==destX&&srcY==destY)
-    return "already present at destination";
-  var exploredCells = [];
-  for(var i=0;i<rows;i++)
-  {
-    var tempArray=new Array();
-    for(var j=0;j<columns;j++)
-    {
-       tempArray.push(false); 
+    if(srcX==destX&&srcY==destY)
+        return "already present at destination";
+    var exploredCells = [];
+    for(var i=0;i<rows;i++) {
+        var tempArray=new Array();
+        for(var j=0;j<columns;j++)
+        {
+        tempArray.push(false); 
+        }
+        exploredCells.push(tempArray);
     }
-    exploredCells.push(tempArray);
-  }
 
-  var cellDetails =[];
-  for(var i=0;i<rows;i++)
-  {
-       var tempArray = new Array();
-       for(var j=0;j<columns;j++)
-       {
-          var cell = {
-            parentX : -1,
-            parentY :-1,
-            f : Number.MAX_VALUE,
-            g : Number.MAX_VALUE,
-            h : Number.MAX_VALUE
-          };
-         tempArray.push(cell);
-       }
-       cellDetails.push(tempArray);
-  } 
-    console.log(cellDetails);
+    // initializing cell details array to store details of nodes
+    var cellDetails =[];
+    for(var i=0;i<rows;i++) {
+        var tempArray = new Array();
+        for(var j=0;j<columns;j++) {
+            var cell = {
+                parentX : -1,
+                parentY :-1,
+                f : Number.MAX_VALUE,
+                g : Number.MAX_VALUE,
+                h : Number.MAX_VALUE
+            };
+            tempArray.push(cell);
+        }
+        cellDetails.push(tempArray);
+    } 
 
+    // initializing start node
     cellDetails[srcY][srcX].f = 0.0; 
     cellDetails[srcY][srcX].g = 0.0; 
     cellDetails[srcY][srcX].h = 0.0; 
@@ -1490,211 +1726,191 @@ var endPoints = {
     cellDetails[srcY][srcX].parentY = srcY; 
 
     unexploredCellsSet = new BinaryHeap();
-
     unexploredCellsSet.insert(0,{x:srcX,y:srcY});
-   var foundDest = {
-    value:false
-   };
+
+    var foundDest = {
+        value:false
+    };
     var temp = {
-    value:false
-   };
-   
+        value:false
+    };
+    
+    // check for all cells in unexplored cell set
+    while(!unexploredCellsSet.isEmpty()) {
+        var val = unexploredCellsSet.extractMinimum();
+        
+        exploredCells[val.value.y][val.value.x]=true;
+        var x = val.value.x;
+        var y = val.value.y;
+        var neighbours = this.getNeighbours(x,y,grid,this.allowDiagonal);
 
-   while(!unexploredCellsSet.isEmpty())
-   {
-      var val = unexploredCellsSet.extractMinimum();
-      
-      exploredCells[val.value.y][val.value.x]=true;
-      var x = val.value.x;
-      var y = val.value.y;
-      var neighbours = this.getNeighbours(x,y,grid,this.allowDiagonal);
-
-      if(this.isDestination(x,y,endPoints)==true) {
-        // cellDetails[y][x].parentX = xOriginal; 
-        // cellDetails[y][x].parentY = yOriginal; 
-        this.printPath (cellDetails,endPoints,path); 
-        foundDest.value = true; 
-        //return; 
-    }
-     
-      for(var i=0;i<neighbours.length;i++)
-      {
-          if(foundDest.value==true)
-          {
-            temp.value=true;
+        if(this.isDestination(x,y,endPoints)==true) {
+            this.printPath (cellDetails,endPoints,path); 
+            foundDest.value = true; 
+        }
+        
+        for(var i=0;i<neighbours.length;i++) {
+            if(foundDest.value==true) {
+                temp.value=true;
+                break;
+            }
+            this.checkneighbour(neighbours[i][0],neighbours[i][1],cellDetails,foundDest,exploredCells,grid,x,y,endPoints,unexploredCellsSet,path);        
+        }
+        if(temp.value==true)
             break;
-          }
-          this.checkneighbour(neighbours[i][0],neighbours[i][1],cellDetails,foundDest,exploredCells,grid,x,y,endPoints,unexploredCellsSet,path);        
-      }
-      if(temp.value==true)
-        break;
 
-     this.operations++;
-     grid.getNodeAt(val.value.x,val.value.y).closed=true;  
-   }
-  console.log(path);
+        this.operations++;
+        grid.getNodeAt(val.value.x,val.value.y).closed=true;  
+    }
 
-  if(this.compare==true)
-  {
-      return {ops:this.operations,path:path};
-  }
-   else
-   {
-      return path;
-   }  
+    if(this.compare==true) {
+        return {ops:this.operations,path:path};
+    }
+    else {
+        return path;
+    }  
 };
 
-ThetaStarFinder.prototype.getCost = function(x,y,x1,y1)
-{
-   if(x==x1||y==y1)
-   {
-    return 1;
-   }
-   else
-   {
-     return 1.414;
-   }
+// to get the cost of moving from a node to its neighbour
+ThetaStarFinder.prototype.getCost = function(x,y,x1,y1) {
+    if(x==x1||y==y1) {
+        return 1;
+    }
+    else {
+        return Math.SQRT2;
+    }
 } 
+
+// to get the euclidean distance from one node to another
 ThetaStarFinder.prototype.losCost = function(x,y,x1,y1) {
     return Math.pow((x-x1)*(x-x1)+(y-y1)*(y-y1),0.5);
 }
 
-ThetaStarFinder.prototype.isValidCell = function (x,y,grid)
-{
-   if(x>=0&&x<grid.nodes[0].length&&y>=0&&y<grid.nodes.length)
-    return true;
-   else
-    return false;
+// to check whether the cell lies within the grid or not
+ThetaStarFinder.prototype.isValidCell = function (x,y,grid) {
+    if(x>=0&&x<grid.nodes[0].length&&y>=0&&y<grid.nodes.length)
+        return true;
+    else
+        return false;
 }
 
-ThetaStarFinder.prototype.isDestination = function isDestination (x,y,endPoints)
-{
-  if(x==endPoints.destX&&y==endPoints.destY)
-    return true;
-  else
-    return false;
+// to check whether the cell is destination or not
+ThetaStarFinder.prototype.isDestination = function isDestination (x,y,endPoints) {
+    if(x==endPoints.destX&&y==endPoints.destY)
+        return true;
+    else
+        return false;
 }
 
- ThetaStarFinder.prototype.printPath = function (cellDetails,endPoints,path)
-{
-  var row = endPoints.destX;
-  var col = endPoints.destY;
-   //console.log(cellDetails[row][col].parentX,cellDetails[row][col].parentY);
-   while (!(cellDetails[col][row].parentX == row 
-             && cellDetails[col][row].parentY == col )) 
-    { 
-        path.push([row,col]); 
-        var temp_row = cellDetails[col][row].parentX; 
-        var temp_col = cellDetails[col][row].parentY; 
-        row = temp_row; 
-        col = temp_col; 
-    } 
-     path.push([row,col]); 
-     path.push([endPoints.srcX,endPoints.srcY]); 
-     //console.log(endPoints.srcX,endPoints.srcY);
-}
-
-ThetaStarFinder.prototype.euclidean =function  (x,y,endPoints)
-{
-  return Math.pow((x-endPoints.destX)*(x-endPoints.destX)+(y-endPoints.destY)*(y-endPoints.destY),0.5);
-}
-
-ThetaStarFinder.prototype.manhattan = function  (x,y,endPoints)
-{
-  var a = Math.abs(x-endPoints.destX);
-  var b = Math.abs(y-endPoints.destY);
-  return a+b;
-}
-
-ThetaStarFinder.prototype.diagonal = function (x,y,endPoints)
-{
-  var a = Math.abs(x-endPoints.destX);
-  var b = Math.abs(y-endPoints.destY);
-  if(a>=b)
-    return a;
-  else
-    return b;
-}
-
-ThetaStarFinder.prototype.isUnblocked = function(grid,x,y)
-{
-   if(grid.nodes[y][x].walkable==1)
-    return true;
-   else
-    return false;
-}
-
-ThetaStarFinder.prototype.isWalkable = function(grid,x,y)
-{
-   if(this.isValidCell(x, y, grid) && this.isUnblocked(grid, x, y)) {
-       return true;
-   }
-   else {
-       return false;
-   }
-}
-
-ThetaStarFinder.prototype.getNeighbours = function(x,y,grid,allowDiagonal)
-{
-       var neighbours = new Array();
-        s0 = false, d0 = false,
-        s1 = false, d1 = false,
-        s2 = false, d2 = false,
-        s3 = false, d3 = false;
-  
-        if(this.isValidCell(x-1,y,grid)&&this.isUnblocked(grid,x-1,y))
-        {
-          neighbours.push([x-1,y]);  
-            s0=true;
-        }
-        if(this.isValidCell(x,y-1,grid)&&this.isUnblocked(grid,x,y-1))
-        {
-          neighbours.push([x,y-1]);  
-             s1=true;        
-        }
-        if(this.isValidCell(x+1,y,grid)&&this.isUnblocked(grid,x+1,y))
+// backtrace and store the path
+ThetaStarFinder.prototype.printPath = function (cellDetails,endPoints,path) {
+    var row = endPoints.destX;
+    var col = endPoints.destY;
+    while (!(cellDetails[col][row].parentX == row && cellDetails[col][row].parentY == col )) 
         { 
-           neighbours.push([x+1,y]);  
-             s2=true;
-        }
-        if(this.isValidCell(x,y+1,grid)&&this.isUnblocked(grid,x,y+1))
-        {
-          neighbours.push([x,y+1]); 
-             s3=true; 
-        }
+            path.push([row,col]); 
+            var temp_row = cellDetails[col][row].parentX; 
+            var temp_col = cellDetails[col][row].parentY; 
+            row = temp_row; 
+            col = temp_col; 
+        } 
+        path.push([row,col]); 
+        path.push([endPoints.srcX,endPoints.srcY]); 
+}
+
+// to calculate euclidean distance of a node to ending node
+ThetaStarFinder.prototype.euclidean =function  (x,y,endPoints) {
+    return Math.pow((x-endPoints.destX)*(x-endPoints.destX)+(y-endPoints.destY)*(y-endPoints.destY),0.5);
+}
+
+// to calculate manhatten distance of a node to ending node
+ThetaStarFinder.prototype.manhattan = function  (x,y,endPoints) {
+    var a = Math.abs(x-endPoints.destX);
+    var b = Math.abs(y-endPoints.destY);
+    return a+b;
+}
+
+// to calculate the diagonal distance of a node to ending node
+ThetaStarFinder.prototype.diagonal = function (x,y,endPoints) {
+    var a = Math.abs(x-endPoints.destX);
+    var b = Math.abs(y-endPoints.destY);
+    if(a>=b)
+        return a;
+    else
+        return b;
+}
+
+// to check whether a cell is blocked or not
+ThetaStarFinder.prototype.isUnblocked = function(grid,x,y) {
+    if(grid.nodes[y][x].walkable==1)
+        return true;
+    else
+        return false;
+}
+
+// to check if a cell is valid and not blocked
+ThetaStarFinder.prototype.isWalkable = function(grid,x,y) {
+    if(this.isValidCell(x, y, grid) && this.isUnblocked(grid, x, y)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+// to get all the adjacent nodes of a node
+ThetaStarFinder.prototype.getNeighbours = function(x,y,grid,allowDiagonal) {
+    var neighbours = new Array();
+    s0 = false, d0 = false,
+    s1 = false, d1 = false,
+    s2 = false, d2 = false,
+    s3 = false, d3 = false;
+  
+    if(this.isValidCell(x-1,y,grid)&&this.isUnblocked(grid,x-1,y)) {
+        neighbours.push([x-1,y]);  
+        s0=true;
+    }
+    if(this.isValidCell(x,y-1,grid)&&this.isUnblocked(grid,x,y-1)) {
+        neighbours.push([x,y-1]);  
+        s1=true;        
+    }
+    if(this.isValidCell(x+1,y,grid)&&this.isUnblocked(grid,x+1,y)) { 
+        neighbours.push([x+1,y]);  
+        s2=true;
+    }
+    if(this.isValidCell(x,y+1,grid)&&this.isUnblocked(grid,x,y+1)) {
+        neighbours.push([x,y+1]); 
+        s3=true; 
+    }
        
-       if(!allowDiagonal)
-       {
+    if(!allowDiagonal)
+    {
         return neighbours;
-       }
+    }
 
-       d0=s1||s2;
-       d1=s2||s3;
-       d2=s3||s0;
-       d3=s0||s1;
+    d0=s1||s2;
+    d1=s2||s3;
+    d2=s3||s0;
+    d3=s0||s1;
 
-       if(this.isValidCell(x+1,y-1,grid)&&d0&&this.isUnblocked(grid,x+1,y-1))
-       {
-           neighbours.push([x+1,y-1]);    
-       }
+    if(this.isValidCell(x+1,y-1,grid)&&d0&&this.isUnblocked(grid,x+1,y-1)) {
+        neighbours.push([x+1,y-1]);    
+    }
+    if(this.isValidCell(x+1,y+1,grid)&&d1&&this.isUnblocked(grid,x+1,y+1)) {
+        neighbours.push([x+1,y+1]);        
+    }
+    if(this.isValidCell(x-1,y+1,grid)&&d2&&this.isUnblocked(grid,x-1,y+1)) {
+        neighbours.push([x-1,y+1]);       
+    }
+    if(this.isValidCell(x-1,y-1,grid)&&d3&&this.isUnblocked(grid,x-1,y-1)) {
+        neighbours.push([x-1,y-1]);      
+    }
 
-       if(this.isValidCell(x+1,y+1,grid)&&d1&&this.isUnblocked(grid,x+1,y+1))
-       {
-          neighbours.push([x+1,y+1]);        
-       }
-       if(this.isValidCell(x-1,y+1,grid)&&d2&&this.isUnblocked(grid,x-1,y+1))
-       {
-           neighbours.push([x-1,y+1]);       
-       }
-       if(this.isValidCell(x-1,y-1,grid)&&d3&&this.isUnblocked(grid,x-1,y-1))
-       {
-          neighbours.push([x-1,y-1]);      
-       }
-
-return neighbours;
+    return neighbours;
 
 }
 
+// to check the neighbour node and try to minimize length by skipping the parent node if line of sight is available
 ThetaStarFinder.prototype.checkneighbour = function (x,y,cellDetails,foundDest,exploredCells,grid,xOriginal,yOriginal,endPoints,unexploredCellsSet,path)
 {
     if(foundDest.value==true)
@@ -1703,115 +1919,49 @@ ThetaStarFinder.prototype.checkneighbour = function (x,y,cellDetails,foundDest,e
     }
     
     if(this.isValidCell(x,y,grid)) {
-        // if(this.isDestination(x,y,endPoints)==true) {
-        //     cellDetails[y][x].parentX = xOriginal; 
-        //     cellDetails[y][x].parentY = yOriginal; 
-        //     this.printPath (cellDetails,endPoints,path); 
-        //     foundDest.value = true; 
-        //     return; 
-        // }
-        //else {
-            var hNew;
-                if(this.heuristic==Heuristic.manhattan) {
-                    hNew =this.manhattan(x,y,endPoints);
-                } else if(this.heuristic==Heuristic.euclidean) {
-                    hNew=this.euclidean(x,y,endPoints);
-                }
-            if(exploredCells[y][x]==false && this.isUnblocked(grid,x,y,endPoints)==true) {
-                var parentx = cellDetails[yOriginal][xOriginal].parentX;
-                var parenty = cellDetails[yOriginal][xOriginal].parentY;
-                if(this.lineOfSight(parentx, parenty, x, y, grid)) {
-                    if((cellDetails[parenty][parentx].g + this.losCost(parentx, parenty, x, y))<cellDetails[y][x].g) {
-                        cellDetails[y][x].g = cellDetails[parenty][parentx].g + this.losCost(parentx, parenty, x, y);
-                        cellDetails[y][x].f = cellDetails[y][x].g + hNew;
-                        cellDetails[y][x].parentX = parentx;
-                        cellDetails[y][x].parentY = parenty;
-                        unexploredCellsSet.insert(cellDetails[y][x].f, {x:x,y:y}); 
-                        grid.getNodeAt(x,y).closed=true;
-                        this.operations++;
-                        // grid.getNodeAt(xOriginal,yOriginal).opened=false;
-                        // grid.getNodeAt(xOriginal,yOriginal).closed=false;
-                    }
-                }
-                else {
-                    
-                    var gNew = cellDetails[yOriginal][xOriginal].g + this.getCost(x,y,xOriginal,yOriginal);
-                    var fNew = gNew+hNew;
-                    
-                    if (cellDetails[y][x].f == Number.MAX_VALUE || cellDetails[y][x].f > fNew) 
-                    {      
-                        unexploredCellsSet.insert(fNew,{x:x,y:y});  
-                        grid.getNodeAt(x,y).opened=true;  
-                        this.operations++;           
-                        cellDetails[y][x].f = fNew; 
-                        cellDetails[y][x].g = gNew; 
-                        cellDetails[y][x].h = hNew; 
-                        cellDetails[y][x].parentX=xOriginal;
-                        cellDetails[y][x].parentY=yOriginal; 
-                    } 
+        var hNew;
+        if(this.heuristic==Heuristic.manhattan) {
+            hNew =this.manhattan(x,y,endPoints);
+        } else if(this.heuristic==Heuristic.euclidean) {
+            hNew=this.euclidean(x,y,endPoints);
+        }
+        if(exploredCells[y][x]==false && this.isUnblocked(grid,x,y,endPoints)==true) {
+            var parentx = cellDetails[yOriginal][xOriginal].parentX;
+            var parenty = cellDetails[yOriginal][xOriginal].parentY;
+
+            // if line of sight found between parent and neighbour of current node, current node is skipped
+            if(this.lineOfSight(parentx, parenty, x, y, grid)) {
+                if((cellDetails[parenty][parentx].g + this.losCost(parentx, parenty, x, y))<cellDetails[y][x].g) {
+                    cellDetails[y][x].g = cellDetails[parenty][parentx].g + this.losCost(parentx, parenty, x, y);
+                    cellDetails[y][x].f = cellDetails[y][x].g + hNew;
+                    cellDetails[y][x].parentX = parentx;
+                    cellDetails[y][x].parentY = parenty;
+                    unexploredCellsSet.insert(cellDetails[y][x].f, {x:x,y:y}); 
+                    grid.getNodeAt(x,y).closed=true;
+                    this.operations++;
                 }
             }
-        //}
+            else {        
+                var gNew = cellDetails[yOriginal][xOriginal].g + this.getCost(x,y,xOriginal,yOriginal);
+                var fNew = gNew+hNew;    
+                if (cellDetails[y][x].f == Number.MAX_VALUE || cellDetails[y][x].f > fNew) 
+                {      
+                    unexploredCellsSet.insert(fNew,{x:x,y:y});  
+                    grid.getNodeAt(x,y).opened=true;  
+                    this.operations++;           
+                    cellDetails[y][x].f = fNew; 
+                    cellDetails[y][x].g = gNew; 
+                    cellDetails[y][x].h = hNew; 
+                    cellDetails[y][x].parentX=xOriginal;
+                    cellDetails[y][x].parentY=yOriginal; 
+                } 
+            }
+        }
     }
 }
 
+// to check whether a line of sight exists between two nodes or not
 ThetaStarFinder.prototype.lineOfSight = function(x1, y1, x2, y2, grid) {
-    // var dx = x1 - x0;
-    // var dy = y1 - y0;
-    // var check = 0;
-    // var sx = 1;
-    // var sy = 1;
-    // if(dy<0) {
-    //     dy = -1*dy;
-    //     sy = -1;
-    // }
-    // if(dx<0) {
-    //     dx = -1*dx;
-    //     sx = -1;
-    // }
-    // if(dx>=dy) {
-    //     while(x0 !== x1) {
-    //         check = check + dy;
-    //         if(check>=dx) {
-    //             if(!this.isWalkable(grid, x0 + ((sx - 1)/2), y0 + ((sy - 1)/2))) {
-    //                 return false;
-    //             }
-    //             y0 = y0 + sy;
-    //             //dy = Math.abs(y1 - y0);
-    //             check = check - dx;
-    //         }
-    //         if(check === 0 && !this.isWalkable(grid, x0 + ((sx - 1)/2), y0 + ((sy - 1)/2))) {
-    //             return false;
-    //         }
-    //         if(dy === 0 && !this.isWalkable(grid, x0 + ((sx - 1)/2), y0) && !this.isWalkable(grid, x0 + ((sx - 1)/2), y0 - 1)){
-    //             return false;
-    //         }
-    //         x0 = x0 + sx;
-    //         //dx = Math.abs(x1 - x0);
-    //     }
-    // }
-    // else {
-    //     while(y0 !== y1) {
-    //         check = check + dx;
-    //         if(check>=dy) {
-    //             if(!this.isWalkable(grid, x0 + ((sx - 1)/2), y0 + ((sy - 1)/2))) {
-    //                 return false;
-    //             }
-    //             x0 = x0 + sx;
-    //             //dx = Math.abs(x1 - x0);
-    //             check = check - dy;
-    //         }
-    //         if(check === 0 && !this.isWalkable(grid, x0 + ((sx - 1)/2), y0 + ((sy - 1)/2))) {
-    //             return false;
-    //         }
-    //         if(dx === 0 && !this.isWalkable(grid, x0, y0 + ((sy - 1)/2)) && !this.isWalkable(grid, x0 - 1, y0 + ((sy - 1)/2))){
-    //             return false;
-    //         }
-    //         y0 = y0 + sy;
-    //         //dy = Math.abs(y1 - y0);
-    //     }
-    // }
-    // return true;
     var i, error, errorprev, 
         ystep = 1, 
         xstep = 1,
@@ -1947,210 +2097,7 @@ module.exports = ThetaStarFinder;
 
 
 
-},{"../core/Heuristic":3,"@tyriar/binary-heap":13}],12:[function(require,module,exports){
-
-function IDAStarFinder(opt) {
-   opt = opt || {};
-   this.allowDiagonal = opt.allowDiagonal;
-   this.heuristic = opt.heuristic;
-   this.timeLimit = opt.timeLimit || Number.MAX_VALUE;
-   this.visualize_recursion = opt.visualize_recursion&&true;
-}
-
-IDAStarFinder.prototype.findPath = function(srcX,srcY,destX,destY,grid) {
-    if(srcX==destX&&srcY==destY)
-    return "already present at destination";
-var rows = grid.nodes.length;
-var columns = grid.nodes[0].length;
-var path = new Array();
-
-var endPoints = {
-   srcX:srcX,
-   srcY:srcY,
-   destX:destX,
-   destY:destY,
-};
-
-
-  var threshold = euclidean(srcX,srcY,endPoints);
-  var path = new Array();
-  path.push([srcX,srcY]); 
-
-  var newThreshold;
-      do {      
-            // Start Search
-            newThreshold = recursion(path,0, threshold,grid,endPoints,this.allowDiagonal,this.visualize_recursion);
-            // Check If Goal Node Was Found
-            if (newThreshold == 0)
-            {
-               console.log('destination found');
-                var finalPath = new Array();
-                return finalPath;
-            }
-            // Set New F Boundary
-            threshold = newThreshold;
-        } while(threshold!=Number.MAX_VALUE);
-
-        return [];
-
-};
-
-function recursion(path,cost,threshold,grid,endPoints,allowDiagonal,visualize_recursion)
-{    
-  
-   var currentNode = path[path.length-1];
-   console.log(currentNode);
-   var f = cost + euclidean(currentNode[0], currentNode[1],endPoints);
-
-   if(f > threshold)
-    return f;
-   
-   if(isDestination(currentNode[0],currentNode[1],endPoints))
-    return 0;
-
-    var minThreshold = Number.MAX_VALUE;
-    var successors =  getSuccessors(currentNode[0],currentNode[1],grid,allowDiagonal);
-    for(var i=0;i<successors.length;i++)
-    {
-      if(!path.includes(successors[i]))
-      {
-        path.push(successors[i]);
-        if(visualize_recursion)
-          grid.getNodeAt(successors[i][0],successors[i][1]).opened=true;       
-         var newCost= getCost(currentNode[0],currentNode[1],successors[i][0],successors[i][1]);
-         var temp = recursion(path,cost + newCost,threshold,grid,endPoints,allowDiagonal,visualize_recursion);
-        if(temp==0)
-          return 0;
-        if(temp<minThreshold)
-          minThreshold= temp;
-        path.pop();
-        if(visualize_recursion)
-          grid.getNodeAt(successors[i][0],successors[i][1]).closed=true;
-        
-      }
-    }
-
-   return minThreshold;
-}
-
-function getCost(x,y,x1,y1)
-{
-  if(x==x1||y==y1)
-   {
-    return 1;
-   }
-   else
-   {
-     return 1.414;
-   }
-}
-
-function isValidCell (x,y,grid)
-{
-   if(x>=0&&x<grid.nodes[0].length&&y>=0&&y<grid.nodes.length)
-    return true;
-   else
-    return false;
-}
-
-
-function isDestination (x,y,endPoints)
-{
-  if(x==endPoints.destX&&y==endPoints.destY)
-    return true;
-  else
-    return false;
-}
-
-function euclidean (x,y,endPoints)
-{
-  return Math.pow((x-endPoints.destX)*(x-endPoints.destX)+(y-endPoints.destY)*(y-endPoints.destY),0.5);
-}
-
-function manhattan (x,y,endPoints)
-{
-  var a = Math.abs(x-endPoints.destX);
-  var b = Math.abs(y-endPoints.destX);
-  return a+b;
-}
-
-function diagonal (x,y,endPoints)
-{
-  var a = Math.abs(x-endPoints.destX);
-  var b = Math.abs(y-endPoints.destY);
-  if(a>=b)
-    return a;
-  else
-    return b;
-}
-
-function isUnblocked (grid,x,y)
-{
-   if(grid.nodes[y][x].walkable==1)
-    return true;
-   else
-    return false;
-}
-
-function getSuccessors(x,y,grid,allowDiagonal)
-{
-   var successors = new Array();
-        s0 = false, d0 = false,
-        s1 = false, d1 = false,
-        s2 = false, d2 = false,
-        s3 = false, d3 = false;
-
-  if(isValidCell(x-1,y,grid)&&isUnblocked(grid,x-1,y))
-  {
-    successors.push([x-1,y]);
-    s0=true;
-  }
-  if(isValidCell(x+1,y,grid)&&isUnblocked(grid,x+1,y))
-  {
-    successors.push([x+1,y]);
-    s2=true;
-  }
-   if(isValidCell(x,y-1,grid)&&isUnblocked(grid,x,y-1))
-  {
-    successors.push([x,y-1]);
-     s1=true;
-  }
-  if(isValidCell(x,y+1,grid)&&isUnblocked(grid,x,y+1))
-  {
-    successors.push([x,y+1]);
-     s3=true; 
-  }
- 
-       d0=s1||s2;
-       d1=s2||s3;
-       d2=s3||s0;
-       d3=s0||s1;
-
-  if(!allowDiagonal)
-  {
-    return successors;
-  }
-  if(d2&&isValidCell(x-1,y+1,grid)&&isUnblocked(grid,x-1,y+1))
-  {
-    successors.push([x-1,y+1]);
-  }
-  if(d3&&isValidCell(x-1,y-1,grid)&&isUnblocked(grid,x-1,y-1))
-  {
-    successors.push([x-1,y-1]);
-  } 
-  if(d0&&isValidCell(x+1,y-1,grid)&&isUnblocked(grid,x+1,y-1))
-  {
-    successors.push([x+1,y-1]);
-  }
-  if(d1&&isValidCell(x+1,y+1,grid)&&isUnblocked(grid,x+1,y+1))
-  {
-    successors.push([x+1,y+1]);  
-  }     
-   return successors;
-}
-
-module.exports = IDAStarFinder;
-},{}],13:[function(require,module,exports){
+},{"../core/Heuristic":3,"@tyriar/binary-heap":13}],13:[function(require,module,exports){
 'use strict';
 
 /**

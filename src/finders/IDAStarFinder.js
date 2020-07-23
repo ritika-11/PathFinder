@@ -1,3 +1,4 @@
+var Heuristic  = require('../core/Heuristic');
 
 function IDAStarFinder(opt) {
    opt = opt || {};
@@ -8,12 +9,13 @@ function IDAStarFinder(opt) {
 }
 
 IDAStarFinder.prototype.findPath = function(srcX,srcY,destX,destY,grid) {
+    console.log(this.heuristic);
+
     if(srcX==destX&&srcY==destY)
     return "already present at destination";
 var rows = grid.nodes.length;
 var columns = grid.nodes[0].length;
 var path = new Array();
-var cellDetails = new Array();
 
 var endPoints = {
    srcX:srcX,
@@ -22,89 +24,83 @@ var endPoints = {
    destY:destY,
 };
 
-  for(var i=0;i<rows;i++)
-  {
-       var tempArray = new Array();
-       for(var j=0;j<columns;j++)
-       {
-          var cell = {
-            parentX : -1,
-            parentY :-1,
-            f : 0,
-            g : 0,
-            h : Number.MIN_VALUE,
-            x :j,
-            y :i,
-          };
-         tempArray.push(cell);
-       }
-       cellDetails.push(tempArray);
-  }
+  var startTime = new Date().getTime();
+  var threshold;
 
-  var threshold = euclidean(srcX,srcY,endPoints);
+     if(this.heuristic==Heuristic.manhattan)
+      {
+          threshold =manhattan(srcX,srcY,endPoints);
+      }else if(this.heuristic==Heuristic.euclidean)
+      {
+         threshold=euclidean(srcX,srcY,endPoints);
+      }
+
   var path = new Array();
-  path.push(cellDetails[srcY][srcX]); 
+  path.push([srcX,srcY]); 
 
   var newThreshold;
       do {      
             // Start Search
-            newThreshold = recursion(path,0, threshold,grid,cellDetails,endPoints,this.allowDiagonal,this.visualize_recursion);
+            newThreshold = recursion(path,0, threshold,grid,endPoints,this.allowDiagonal,this.visualize_recursion,startTime,this.timeLimit,this.heuristic);
             // Check If Goal Node Was Found
             if (newThreshold == 0)
             {
                console.log('destination found');
-                var finalPath = new Array();
-                for(var i=0;i<path.length;i++)
-                {
-                  finalPath.push([path[i].x,path[i].y]);
-                }
-                finalPath.push([destX,destY]);
-                console.log('destination found');
-                console.log(finalPath);
-                return finalPath;
+               return path;
             }
             // Set New F Boundary
             threshold = newThreshold;
-        } while(threshold!=Number.MAX_VALUE);
+        } while(threshold!==Number.MAX_VALUE);
 
         return [];
 
 };
 
-function recursion(path,cost,threshold,grid,cellDetails,endPoints,allowDiagonal,visualize_recursion)
+function recursion(path,cost,threshold,grid,endPoints,allowDiagonal,visualize_recursion,startTime,timeLimit,heuristic)
 {    
   
-   var currentNode = path[path.length-1];
-   console.log(currentNode);
-   //console.log(currentNode);
-   currentNode.h = euclidean(currentNode.x, currentNode.y,endPoints);
-   currentNode.g = cost;
-   currentNode.f = cost + currentNode.h;
+   if (timeLimit > 0 &&
+            new Date().getTime() - startTime > timeLimit * 1000) {
+            return Number.MAX_VALUE;
+     }
 
-   if(currentNode.f > threshold)
-    return currentNode.f;
+   var currentNode = path[path.length-1];
+    var additionalCost;
+
+   if(heuristic==Heuristic.manhattan)
+      {
+          additionalCost =manhattan(currentNode[0], currentNode[1],endPoints);
+      }else if(heuristic==Heuristic.euclidean)
+      {
+         additionalCost=euclidean(currentNode[0], currentNode[1],endPoints);
+      }
+
+   var f = cost + additionalCost;
+   if(f > threshold)
+    return f;
    
-   if(isDestination(currentNode.x,currentNode.y,endPoints))
+   if(isDestination(currentNode[0],currentNode[1],endPoints))
     return 0;
 
     var minThreshold = Number.MAX_VALUE;
-    var successors =  getSuccessors(currentNode.x,currentNode.y,cellDetails,grid,allowDiagonal);
+    var successors =  getSuccessors(currentNode[0],currentNode[1],grid,allowDiagonal);
+
     for(var i=0;i<successors.length;i++)
     {
       if(!path.includes(successors[i]))
       {
         path.push(successors[i]);
         if(visualize_recursion)
-          grid.getNodeAt(successors[i].x,successors[i].y).opened=true;       
-         var newCost= getCost(currentNode.x,currentNode.y,successors[i].x,successors[i].y);
-         var temp = recursion(path,currentNode.g+newCost,threshold,grid,cellDetails,endPoints,allowDiagonal,visualize_recursion);
+          grid.getNodeAt(successors[i][0],successors[i][1]).opened=true;       
+         var newCost= getCost(currentNode[0],currentNode[1],successors[i][0],successors[i][1]);
+         var temp = recursion(path,cost + newCost,threshold,grid,endPoints,allowDiagonal,visualize_recursion,startTime,timeLimit,heuristic);
         if(temp==0)
           return 0;
         if(temp<minThreshold)
           minThreshold= temp;
         path.pop();
         if(visualize_recursion)
-          grid.getNodeAt(successors[i].x,successors[i].y).closed=true;
+          grid.getNodeAt(successors[i][0],successors[i][1]).closed=true;
         
       }
     }
@@ -120,7 +116,7 @@ function getCost(x,y,x1,y1)
    }
    else
    {
-     return 1.414;
+     return Math.SQRT2;
    }
 }
 
@@ -141,15 +137,15 @@ function isDestination (x,y,endPoints)
     return false;
 }
 
-function euclidean (x,y,endPoints)
+function euclidean (x,y,endPoints,heu)
 {
-  return Math.pow((x-endPoints.destX)*(x-endPoints.destX)+(y-endPoints.destY)*(y-endPoints.destY),0.5);
+  return Math.sqrt((x-endPoints.destX)*(x-endPoints.destX)+(y-endPoints.destY)*(y-endPoints.destY));
 }
 
 function manhattan (x,y,endPoints)
 {
   var a = Math.abs(x-endPoints.destX);
-  var b = Math.abs(y-endPoints.destX);
+  var b = Math.abs(y-endPoints.destY);
   return a+b;
 }
 
@@ -171,7 +167,7 @@ function isUnblocked (grid,x,y)
     return false;
 }
 
-function getSuccessors(x,y,cellDetails,grid,allowDiagonal)
+function getSuccessors(x,y,grid,allowDiagonal)
 {
    var successors = new Array();
         s0 = false, d0 = false,
@@ -181,30 +177,22 @@ function getSuccessors(x,y,cellDetails,grid,allowDiagonal)
 
   if(isValidCell(x-1,y,grid)&&isUnblocked(grid,x-1,y))
   {
-    cellDetails[y][x-1].parentX=x;
-    cellDetails[y][x-1].parentY=y;
-    successors.push(cellDetails[y][x-1]);
+    successors.push([x-1,y]);
     s0=true;
   }
   if(isValidCell(x+1,y,grid)&&isUnblocked(grid,x+1,y))
   {
-    cellDetails[y][x+1].parentX=x;
-    cellDetails[y][x+1].parentY=y;
-    successors.push(cellDetails[y][x+1]);
+    successors.push([x+1,y]);
     s2=true;
   }
    if(isValidCell(x,y-1,grid)&&isUnblocked(grid,x,y-1))
   {
-    cellDetails[y-1][x].parentX=x;
-    cellDetails[y-1][x].parentY=y;
-    successors.push(cellDetails[y-1][x]);
+    successors.push([x,y-1]);
      s1=true;
   }
   if(isValidCell(x,y+1,grid)&&isUnblocked(grid,x,y+1))
   {
-    cellDetails[y+1][x].parentX=x;
-    cellDetails[y+1][x].parentY=y;
-    successors.push(cellDetails[y+1][x]);
+    successors.push([x,y+1]);
      s3=true; 
   }
  
@@ -219,27 +207,19 @@ function getSuccessors(x,y,cellDetails,grid,allowDiagonal)
   }
   if(d2&&isValidCell(x-1,y+1,grid)&&isUnblocked(grid,x-1,y+1))
   {
-    cellDetails[y+1][x-1].parentX=x;
-    cellDetails[y+1][x-1].parentY=y;
-    successors.push(cellDetails[y+1][x-1]);
+    successors.push([x-1,y+1]);
   }
   if(d3&&isValidCell(x-1,y-1,grid)&&isUnblocked(grid,x-1,y-1))
   {
-    cellDetails[y-1][x-1].parentX=x;
-    cellDetails[y-1][x-1].parentY=y;
-    successors.push(cellDetails[y-1][x-1]);
+    successors.push([x-1,y-1]);
   } 
   if(d0&&isValidCell(x+1,y-1,grid)&&isUnblocked(grid,x+1,y-1))
   {
-    cellDetails[y-1][x+1].parentX=x;
-    cellDetails[y-1][x+1].parentY=y;
-    successors.push(cellDetails[y-1][x+1]);
+    successors.push([x+1,y-1]);
   }
   if(d1&&isValidCell(x+1,y+1,grid)&&isUnblocked(grid,x+1,y+1))
   {
-    cellDetails[y+1][x+1].parentX=x;
-    cellDetails[y+1][x+1].parentY=y;
-    successors.push(cellDetails[y+1][x+1]);  
+    successors.push([x+1,y+1]);  
   }     
    return successors;
 }

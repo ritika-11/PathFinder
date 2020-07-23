@@ -15,7 +15,7 @@ if(srcX==destX&&srcY==destY)
 var rows = grid.nodes.length;
 var columns = grid.nodes[0].length;
 
-var paths = new Array();
+var paths = [];
 var bh = new BinaryHeap();
 var countDest = grid.getNodeAt(destX,destY).countu;
 
@@ -64,6 +64,10 @@ bh.insert(0,[{x:srcX,y:srcY}]);
  	countDest = grid.getNodeAt(destX,destY).countu;
  }
 
+ if(paths.length==0)
+ {
+    return [];
+ }
  var returnValue=new Array();
  for(var i=0;i<this.K;i++)
  {

@@ -8,8 +8,7 @@ module.exports = {
     'BestFirstFinder'           : require('./finders/BestFirstFinder'),
     'BreadthFirstFinder'        : require('./finders/BreadthFirstFinder'),
     'DijkstraFinder'            : require('./finders/DijkstraFinder'),
-    //'IDAStarFinder'             : require('./finders/IDAStarFinder'),
-    'IDAStarFinder'             : require('./finders/dummy'),
+    'IDAStarFinder'             : require('./finders/IDAStarFinder'),
     'ThetaStarFinder'           : require('./finders/ThetaStarFinder'),
     'KShortestPathFinder'       : require('./finders/KShortestPathFinder'),
 };

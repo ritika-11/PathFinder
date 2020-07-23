@@ -107,7 +107,9 @@
             <h6>Heuristic</h6>
           </header>
           <div id="ida_heuristic" class="sub_options">
-            <input type="radio" name="ida_heuristic" value="euclidean" checked/>
+            <input type="radio" name="ida_heuristic" value="manhattan" checked/>
+            <label class="option_label">Manhattan</label> <br>
+            <input type="radio" name="ida_heuristic" value="euclidean" />
             <label class="option_label">Euclidean</label> <br>
            
             
@@ -120,6 +122,8 @@
             <label class="option_label">Allow Diagonal</label> <br>
             <input type="checkbox" class="visualize_recursion" checked>
             <label class="option_label">Visualize Recursion</label> <br> <br>
+            <input class="spinner" name="time_limit" value="15">
+            <label class="option_label">Seconds limit</label> <br>
           </div>
         </div>
 

@@ -10,12 +10,10 @@ function AStarFinder(opt) {
 }
 
 AStarFinder.prototype.findPath = function(srcX,srcY,destX,destY,grid) {
-  console.log('went here to find path');
 var unexploredCellsSet;
 var rows = grid.nodes.length;
 var columns = grid.nodes[0].length;
 var path = new Array();
-console.log(rows);
 
 var endPoints = {
    srcX:srcX,
@@ -24,7 +22,7 @@ var endPoints = {
    destY:destY,
 };
 
-
+//if the source is already present 
   if(srcX==destX&&srcY==destY)
     return "already present at destination";
   var exploredCells = [];
@@ -55,7 +53,6 @@ var endPoints = {
        }
        cellDetails.push(tempArray);
   } 
-    console.log(cellDetails);
 
     cellDetails[srcY][srcX].f = 0.0; 
     cellDetails[srcY][srcX].g = 0.0; 
@@ -98,7 +95,6 @@ var endPoints = {
      this.operations++;
      grid.getNodeAt(val.value.x,val.value.y).closed=true;  
    }
-  console.log(path);
 
   if(this.compare==true)
   {
@@ -142,7 +138,6 @@ AStarFinder.prototype.isDestination = function isDestination (x,y,endPoints)
 {
   var row = endPoints.destX;
   var col = endPoints.destY;
-   //console.log(cellDetails[row][col].parentX,cellDetails[row][col].parentY);
    while (!(cellDetails[col][row].parentX == row 
              && cellDetails[col][row].parentY == col )) 
     { 
@@ -154,7 +149,6 @@ AStarFinder.prototype.isDestination = function isDestination (x,y,endPoints)
     } 
      path.push([row,col]); 
      path.push([endPoints.srcX,endPoints.srcY]); 
-     //console.log(endPoints.srcX,endPoints.srcY);
 }
 
 AStarFinder.prototype.euclidean =function  (x,y,endPoints)

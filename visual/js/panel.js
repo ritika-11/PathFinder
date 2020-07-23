@@ -110,12 +110,15 @@ var Panel = {
                                      '.allow_diagonal:checked').val() !== 'undefined';
             visualize_recursion = typeof $('#ida_section ' +
                                      '.visualize_recursion:checked').val() !== 'undefined';
-            heuristic = $('input[name=jump_point_heuristic]:checked').val();
+            heuristic = $('input[name=ida_heuristic]:checked').val();
+
+            timeLimit = parseInt($('#ida_section input[name=time_limit]').val());
 
             finder = new Pf.IDAStarFinder({
               allowDiagonal: allowDiagonal,
               heuristic: Pf.Heuristic[heuristic],
               visualize_recursion:visualize_recursion,
+              timeLimit:timeLimit,
             });
 
             break;
@@ -128,14 +131,13 @@ var Panel = {
                                      '.visualize_recursion:checked').val() !== 'undefined';
 
             var paths = $('input[name=NumberOfPaths]:checked').val();
-
-
             finder = new Pf.KShortestPathFinder({
                 allowDiagonal:allowDiagonal,
                 multiplePaths:true,
                 K:paths,
                 visualize_recursion:visualize_recursion
             });
+            
             break;
 
         }
