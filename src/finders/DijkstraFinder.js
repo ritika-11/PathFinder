@@ -1,3 +1,7 @@
+/**
+ * @author ritika
+ */
+
 var BinaryHeap = require('@tyriar/binary-heap');
 var Util = require('../core/Util');
 
@@ -27,7 +31,7 @@ DijkstraFinder.prototype.findPath = function(startX, startY, endX, endY, grid, e
     endNodes = [], 
     diagonalMovement = this.diagonalMovement,
     compare = this.compare;
-    var node, neighbors, neighbor, i, l, x, y, distance, destinationNumber = 1, operations = 0;
+    var node, neighbors, neighbor, i, x, y, distance, destinationNumber = 1, operations = 0;
 
     // get all destination nodes from end array
     for(var a=0;a<end.length;a++) {

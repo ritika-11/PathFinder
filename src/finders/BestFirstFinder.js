@@ -1,3 +1,7 @@
+/**
+ * @author ritika
+ */
+
 var BinaryHeap = require('@tyriar/binary-heap');
 var Util       = require('../core/Util');
 var Heuristic  = require('../core/Heuristic');
@@ -32,7 +36,7 @@ BestFirstFinder.prototype.findPath = function(startX, startY, endX, endY, grid, 
         heuristic = this.heuristic,
         diagonalMovement = this.diagonalMovement,
         compare = this.compare,
-        abs = Math.abs, node, neighbors, neighbor, i, l, x, y, destinationNumber = 1, operations = 0;
+        abs = Math.abs, node, neighbors, neighbor, i, x, y, destinationNumber = 1, operations = 0;
 
         // get all destination nodes from end array
         for(var a=0;a<end.length;a++) {

@@ -1,3 +1,7 @@
+/**
+ * @author rutuja
+ */
+
 var Heuristic  = require('../core/Heuristic');
 
 /**

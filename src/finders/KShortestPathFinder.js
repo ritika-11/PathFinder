@@ -1,3 +1,7 @@
+/**
+ * @author rutuja
+ */
+
 var BinaryHeap = require('@tyriar/binary-heap');
 
 function KShortestPathFinder(opt) {

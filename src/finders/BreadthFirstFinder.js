@@ -1,3 +1,7 @@
+/**
+ * @author ritika
+ */
+
 var Util = require('../core/Util');
 
 /**
@@ -26,7 +30,7 @@ BreadthFirstFinder.prototype.findPath = function(startX, startY, endX, endY, gri
     var   compare = this.compare;
     var   startNode = grid.getNodeAt(startX, startY);
     var   endNodes = [];
-    var   neighbors, neighbor, node, i, l, destinationIndex = -1, destinationNumber = 1, operations = 0;
+    var   neighbors, neighbor, node, i, destinationIndex = -1, destinationNumber = 1, operations = 0;
 
     // get all destination nodes from end array
     for(var a=0 ;a<end.length; a++) {

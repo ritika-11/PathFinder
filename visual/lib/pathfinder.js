@@ -577,6 +577,10 @@ function compressPath(path) {
 exports.compressPath = compressPath;
 
 },{}],6:[function(require,module,exports){
+/**
+ * @author rutuja
+ */
+
 var BinaryHeap = require('@tyriar/binary-heap');
 var Heuristic  = require('../core/Heuristic');
 
@@ -898,6 +902,10 @@ module.exports = AStarFinder;
 
 
 },{"../core/Heuristic":3,"@tyriar/binary-heap":13}],7:[function(require,module,exports){
+/**
+ * @author ritika
+ */
+
 var BinaryHeap = require('@tyriar/binary-heap');
 var Util       = require('../core/Util');
 var Heuristic  = require('../core/Heuristic');
@@ -932,7 +940,7 @@ BestFirstFinder.prototype.findPath = function(startX, startY, endX, endY, grid, 
         heuristic = this.heuristic,
         diagonalMovement = this.diagonalMovement,
         compare = this.compare,
-        abs = Math.abs, node, neighbors, neighbor, i, l, x, y, destinationNumber = 1, operations = 0;
+        abs = Math.abs, node, neighbors, neighbor, i, x, y, destinationNumber = 1, operations = 0;
 
         // get all destination nodes from end array
         for(var a=0;a<end.length;a++) {
@@ -1035,6 +1043,10 @@ BestFirstFinder.prototype.findPath = function(startX, startY, endX, endY, grid, 
 module.exports = BestFirstFinder;
 
 },{"../core/Heuristic":3,"../core/Util":5,"@tyriar/binary-heap":13}],8:[function(require,module,exports){
+/**
+ * @author ritika
+ */
+
 var Util = require('../core/Util');
 
 /**
@@ -1063,7 +1075,7 @@ BreadthFirstFinder.prototype.findPath = function(startX, startY, endX, endY, gri
     var   compare = this.compare;
     var   startNode = grid.getNodeAt(startX, startY);
     var   endNodes = [];
-    var   neighbors, neighbor, node, i, l, destinationIndex = -1, destinationNumber = 1, operations = 0;
+    var   neighbors, neighbor, node, i, destinationIndex = -1, destinationNumber = 1, operations = 0;
 
     // get all destination nodes from end array
     for(var a=0 ;a<end.length; a++) {
@@ -1146,6 +1158,10 @@ BreadthFirstFinder.prototype.findPath = function(startX, startY, endX, endY, gri
 module.exports = BreadthFirstFinder;
 
 },{"../core/Util":5}],9:[function(require,module,exports){
+/**
+ * @author ritika
+ */
+
 var BinaryHeap = require('@tyriar/binary-heap');
 var Util = require('../core/Util');
 
@@ -1175,7 +1191,7 @@ DijkstraFinder.prototype.findPath = function(startX, startY, endX, endY, grid, e
     endNodes = [], 
     diagonalMovement = this.diagonalMovement,
     compare = this.compare;
-    var node, neighbors, neighbor, i, l, x, y, distance, destinationNumber = 1, operations = 0;
+    var node, neighbors, neighbor, i, x, y, distance, destinationNumber = 1, operations = 0;
 
     // get all destination nodes from end array
     for(var a=0;a<end.length;a++) {
@@ -1270,6 +1286,10 @@ DijkstraFinder.prototype.findPath = function(startX, startY, endX, endY, grid, e
 module.exports = DijkstraFinder;
 
 },{"../core/Util":5,"@tyriar/binary-heap":13}],10:[function(require,module,exports){
+/**
+ * @author rutuja
+ */
+
 var Heuristic  = require('../core/Heuristic');
 
 /**
@@ -1509,6 +1529,10 @@ function getSuccessors(x,y,grid,allowDiagonal)
 
 module.exports = IDAStarFinder;
 },{"../core/Heuristic":3}],11:[function(require,module,exports){
+/**
+ * @author rutuja
+ */
+
 var BinaryHeap = require('@tyriar/binary-heap');
 
 function KShortestPathFinder(opt) {
@@ -1703,6 +1727,10 @@ return neighbours;
 module.exports = KShortestPathFinder;
 
 },{"@tyriar/binary-heap":13}],12:[function(require,module,exports){
+/**
+ * @author ritika
+ */
+
 var BinaryHeap = require('@tyriar/binary-heap');
 var Heuristic  = require('../core/Heuristic');
 

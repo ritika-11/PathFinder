@@ -1,3 +1,7 @@
+/**
+ * @author ritika
+ */
+
 var BinaryHeap = require('@tyriar/binary-heap');
 var Heuristic  = require('../core/Heuristic');
 
